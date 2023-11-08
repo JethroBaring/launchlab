@@ -14,9 +14,9 @@ class Applicant(BaseModel):
     member_1_email = models.EmailField()
     member_2_name = models.CharField(max_length=100)
     member_3_name = models.CharField(max_length=100)
-    member_4_name = models.CharField(max_length=100)
-    member_5_name = models.CharField(max_length=100)
-    university_name = models.CharField(max_length=200)
+    member_4_name = models.CharField(max_length=100, null=True, blank=True)
+    member_5_name = models.CharField(max_length=100, null=True, blank=True)
+    university_name = models.CharField(max_length=200, null=True, blank=True)
     eligibility = models.BooleanField()
 
 
