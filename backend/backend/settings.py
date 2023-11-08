@@ -109,6 +109,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": "rest_framework.permissions.IsAuthenticated",
+    "DEFAULT_PAGINATION_CLASS": "generic.pagination.DefaultResultsSetPagination",
+    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.AcceptHeaderVersioning",
+    "DATETIME_FORMAT": "%m/%d/%Y %H:%M:%S GMT%z",
+    "DATETIME_INPUT_FORMATS": ["%m/%d/%Y %H:%M:%S GMT%z", "iso-8601"],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
