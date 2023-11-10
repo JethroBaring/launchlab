@@ -84,7 +84,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "launchlab",
         "USER": "root",
-        "PASSWORD": "",
+        "PASSWORD": "Jethro#123",
         "HOST": "127.0.0.1",
         "PORT": "3306",
         "OPTIONS": {
