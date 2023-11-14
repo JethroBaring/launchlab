@@ -128,3 +128,9 @@ class ReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet):
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+
+class UserViewSet(mixins.RetrieveModelMixin, BaseViewSet):
+    queryset = users_models.User.objects
+    serializer_class = startups_serializers.base.UserSerializer
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)

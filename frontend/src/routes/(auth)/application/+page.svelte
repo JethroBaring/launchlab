@@ -1,24 +1,19 @@
 <script lang="ts">
-	import DataPrivacy from '$lib/components/application/DataPrivacy.svelte';
-	import EligibilityAgreement from '$lib/components/application/EligibilityAgreement.svelte';
-	import GroupInformation from '$lib/components/application/GroupInformation.svelte';
-	import ProjectDetails from '$lib/components/application/ProjectDetails.svelte';
+	import {
+		DataPrivacy,
+		ProjectDetails,
+		GroupInformation,
+		EligibilityAgreement
+	} from '$lib/components/application';
+	import type { ActionData } from './$types';
+	export let form: ActionData;
 
 	let steps = ['data-privacy', 'project-details', 'group-information', 'eligibility-agreement'],
 		currentActive = 0;
 
 	let formData = {
 		dataPrivacy: false,
-		startupName: '',
-		links: '',
-		groupName: '',
-		memberName1: '',
-		memberName2: '',
-		memberName3: '',
-		memberName4: '',
-		memberName5: '',
-		universityName: '',
-		eligibility: ''
+		eligibility: false,
 	};
 
 	const handleStep = (stepIncrement: number) => {
@@ -27,8 +22,18 @@
 	};
 
 	const toggleDataPrivacy = () => {
-		formData.dataPrivacy = !formData.dataPrivacy
-	}
+		formData.dataPrivacy = !formData.dataPrivacy;
+	};
+
+	const toggleEligibility = () => {
+		formData.eligibility = !formData.eligibility;
+	};
+
+
+
+
+	
+	console.log(form?.credentials);
 </script>
 
 <div class="flex-1 flex-col h-full rounded-inherit flex items-center justify-center">
@@ -40,36 +45,54 @@
 </div>
 <div class="flex-1 flex flex-col gap-5 items-center justify-between h-full">
 	<div class="flex-1 flex flex-col w-full p-10">
-		{#if steps[currentActive] === 'data-privacy'}
-			<DataPrivacy dataPrivacy={formData.dataPrivacy} toggleDataPrivacy={toggleDataPrivacy}/>
-		{:else if steps[currentActive] === 'project-details'}
-			<ProjectDetails
-				startupName={formData.startupName}
-				groupName={formData.groupName}
-				links={formData.links}
-			/>
-		{:else if steps[currentActive] === 'group-information'}
-			<GroupInformation
-				memberName1={formData.memberName1}
-				memberName2={formData.memberName2}
-				memberName3={formData.memberName3}
-				memberName4={formData.memberName4}
-				memberName5={formData.memberName5}
-				universityName={formData.universityName}
-			/>
-		{:else if steps[currentActive] === 'eligibility-agreement'}
-			<EligibilityAgreement />
+		{#if currentActive === 0}
+			<h1 class="text-2xl font-semibold mb-5 px-6">Data Privacy and Consent</h1>
+		{:else if currentActive === 1}
+			<h1 class="text-2xl font-semibold mb-5 px-6">Project Details</h1>
+		{:else if currentActive === 2}
+			<h1 class="text-2xl font-semibold mb-5 px-6">Group Information</h1>
+		{:else if currentActive === 3}
+			<h1 class="text-2xl font-semibold mb-5 px-6">Eligibility and Agreement</h1>
 		{/if}
-		<div class="flex gap-3 justify-end">
-			{#if currentActive != 0}
-				<button class="btn" on:click={() => handleStep(-1)}>Prev</button>
-			{/if}
+		<form
+			action="?/application"
+			method="post"
+			class="flex-1 flex flex-col"
+			enctype="multipart/form-data"
+		>
+			<DataPrivacy dataPrivacy={formData.dataPrivacy} {toggleDataPrivacy} {currentActive} />
+			<ProjectDetails {currentActive}/>
+			<GroupInformation {currentActive}/>
+			<EligibilityAgreement
+				{toggleEligibility}
+				eligibility={formData.eligibility}
+				{currentActive}
+			/>
 
-			{#if currentActive < steps.length - 1}
-				<button class="btn" on:click={() => handleStep(1)} disabled={!formData.dataPrivacy}>Next</button>
-			{:else}
-				<button class="btn btn-primary">Submit</button>
+			<div class="flex gap-3 justify-end">
+				{#if currentActive != 0}
+					<button class="btn" on:click|preventDefault={() => handleStep(-1)}>Prev</button>
+				{/if}
+
+				{#if currentActive < steps.length - 1}
+					<button
+						class="btn"
+						on:click|preventDefault={() => handleStep(1)}
+						type="submit"
+						disabled={!formData.dataPrivacy}>Next</button
+					>
+				{:else}
+					<button
+						class="btn btn-primary"
+						type="submit"
+						disabled={!formData.eligibility}
+						>Submit</button
+					>
+				{/if}
+			</div>
+			{#if form?.credentials}
+				<p>invalid credentials</p>
 			{/if}
-		</div>
+		</form>
 	</div>
 </div>

@@ -1,13 +1,13 @@
-<script>
-	import AboutUs from '$lib/components/app/AboutUs.svelte';
-	import Footer from '$lib/components/app/Footer.svelte';
-	import Header from '$lib/components/app/Header.svelte';
-	import Hero from '$lib/components/app/Hero.svelte';
-	import HowItWork from '$lib/components/app/HowItWork.svelte';
+<script lang="ts">
+	import { Header, Hero, HowItWork, AboutUs, Footer } from '$lib/components/app';
 </script>
 
-<Header />
-<Hero />
-<HowItWork />
-<AboutUs />
-<Footer />
+<div class="bg-grid">
+	<div class="w-4/5 mx-auto">
+		<Header />
+		<Hero />
+		<HowItWork />
+		<AboutUs />
+		<Footer />
+	</div>
+</div>
