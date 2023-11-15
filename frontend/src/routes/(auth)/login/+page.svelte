@@ -3,6 +3,10 @@
 	export let form: ActionData;
 </script>
 
+<svelte:head>
+	<title>Login</title>
+</svelte:head>
+
 <div class="flex-1 flex-col h-full rounded-inherit flex items-center justify-center">
 	<div class="p-5 flex gap-2 cursor-pointer items-center w-full">
 		<img src="launchlab_logo.png" alt="citeams_logo" class="w-8" />

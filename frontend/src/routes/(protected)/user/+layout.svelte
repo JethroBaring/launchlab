@@ -1,5 +1,4 @@
 <script>
-	import { page } from '$app/stores';
 	import { TopBar, LeftSideBar, BottomBar } from '$lib/components/shared';
 	import { userSidebarLinks } from '$lib/constants';
 	export let data

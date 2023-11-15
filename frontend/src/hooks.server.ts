@@ -2,16 +2,7 @@ import type { Handle } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	//const cookies = event.cookies.getAll();
-	// console.log('_____________________________________________________');
-	// console.log(cookies);
-	// console.log('_____________________________________________________');
 	let access = event.cookies.get('Access');
-	// try {
-	// 	const decode = jwt.verify(access!, 'django-insecure-vak*mz%99+#882*g*87x8$%!r=trnnqd)zh2)i$w51ra4cd&eg');
-	// } catch(err) {
-	// 	console.log(err)
-	// }
 	if (!access) {
 		try {
 			const refresh = event.cookies.get('Refresh');
@@ -49,7 +40,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 	if (access) {
 		try {
-			console.log(access);
 			const decoded = jwt.verify(
 				access,
 				'django-insecure-vak*mz%99+#882*g*87x8$%!r=trnnqd)zh2)i$w51ra4cd&eg'
@@ -73,7 +63,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 					firstName: data?.first_name,
 					lastName: data?.last_name
 				};
-				console.log(data)
 				console.log('access token not expired');
 			} else {
 				console.error('Request failed:', response.status, response.statusText);

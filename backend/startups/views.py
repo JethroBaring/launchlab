@@ -95,7 +95,7 @@ class ApplicantViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, BaseVie
     @action(url_path="reject-applicant", detail=True, methods=["POST"])
     def reject_applicant(self, request, pk):
         applicant = self.get_object()
-
+    
         # Send email
         #
         return Response("sent email successfully", status=status.HTTP_200_OK)
