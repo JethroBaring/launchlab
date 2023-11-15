@@ -11,7 +11,7 @@ from drf_yasg.utils import swagger_auto_schema
 from generic.email import send_email
 from generic import utils as generic_utils
 from django.utils import timezone
-
+from django.template.loader import render_to_string
 
 # TODO:
 # update email content
@@ -83,9 +83,10 @@ class ApplicantViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, BaseVie
         startup = startups_models.Startup.objects.create(
             applicant=applicant, user=user, name=applicant.starup_name
         )
-
-        subject = "LaunchLab Application Status"
-        message = "Body of the email."
+        mydic= {'email': email, 'password': password}
+        subject = "LaunchLab Application Approved – Welcome aboard!"
+        html_template = "emailtemplate.html" 
+        message = render_to_string(html_template, context=mydic)
         recipient_list = [email]
         send_email(subject, message, recipient_list)
 
