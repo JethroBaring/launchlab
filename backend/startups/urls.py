@@ -5,6 +5,5 @@ router = routers.SimpleRouter()
 router.register(r"applicants", views.ApplicantViewSet)
 router.register(r"startups", views.StartupViewSet)
 router.register(r"readiness-levels", views.ReadinessLevelViewSet)
-router.register(r"user", views.UserViewSet)
 
 urlpatterns = router.urls

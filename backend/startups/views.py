@@ -100,9 +100,15 @@ class ApplicantViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, BaseVie
     @action(url_path="reject-applicant", detail=True, methods=["POST"])
     def reject_applicant(self, request, pk):
         applicant = self.get_object()
+        applicant.datetime_deleted = timezone.now()
+        applicant.save(update_fields=["datetime_deleted"])
 
-        # Send email
-        #
+        email = applicant.member_1_email
+        subject = "LaunchLab Application Status"
+        message = "Body of the email."
+        recipient_list = [email]
+        send_email(subject, message, recipient_list)
+
         return Response("sent email successfully", status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -150,9 +156,3 @@ class ReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet):
         return super().create(request, *args, **kwargs)
 
 
-class UserViewSet(mixins.RetrieveModelMixin, BaseViewSet):
-    queryset = users_models.User.objects
-    serializer_class = startups_serializers.base.UserSerializer
-
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)

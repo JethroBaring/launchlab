@@ -36,7 +36,6 @@ export const actions = {
 		);
 
 		if (response.ok) {
-			message.update((m) => m = 'email has been sent')
 			throw redirect(302, '/admin/dashboard/applicants')
 		} else {
 			console.log(response.statusText);
