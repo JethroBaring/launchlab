@@ -11,9 +11,6 @@ export default {
         'Inter': ['Inter', 'sans-serif']
       },
       boxShadow: ['dark'],
-      flex: {
-        '2' : '0 0 auto'
-      }
     },
   },
   plugins: [require("daisyui")],

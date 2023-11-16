@@ -104,3 +104,81 @@ export const groupInformation = [
 		required: false
 	}
 ];
+
+export const technologyReadinessLevel = [
+	{
+		question: 'Is the technology fully developed and ready to use?',
+		level: 9
+	},
+	{
+		question: 'Is the technology tested and validated in a broad scale?',
+		level: 8
+	},
+	{
+		question: 'Is the technology tested and validated in natural',
+		level: 7
+	},
+	{
+		question: 'Is a prototype tested and validated in a relevant environment?',
+		level: 6
+	},
+	{
+		question: 'Are core components tested together and validated in lab/simulated environment?',
+		level: 5
+	},
+	{
+		question: 'Are the core technological elements tested and validated one by one?',
+		level: 4
+	},
+	{
+		question: 'Is a concept clearly demonstrated and described?',
+		level: 3
+	},
+	{
+		question: 'Is the idea explicitly described?',
+		level: 2
+	},
+	{
+		question: 'Is a specific technological idea formulated? ',
+		level: 1
+	}
+]
+
+export const marketReadinessLevel = [
+	{
+		question: 'Is the product available in a market through a defined business model?',
+		level: 9
+	},
+	{
+		question: 'Is product demand stable or growing? ',
+		level: 8
+	},
+	{
+		question: 'Has there been demand for the product in the market?',
+		level: 7
+	},
+	{
+		question: 'Has the product been sold in small amounts?',
+		level: 6
+	},
+	{
+		question: 'Are core components tested together and validated in lab/simulated environment?',
+		level: 5
+	},
+	{
+		question: 'Are the core technological elements tested and validated one by one?',
+		level: 4
+	},
+	{
+		question: 'Is a concept clearly demonstrated and described?',
+		level: 3
+	},
+	{
+		question: 'Is the idea explicitly described?',
+		level: 2
+	},
+	{
+		question: 'Is a specific technological idea formulated? ',
+		level: 1
+	}
+]

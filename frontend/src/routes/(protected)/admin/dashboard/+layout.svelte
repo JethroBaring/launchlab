@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { message } from "../../../../stores/message";
 	let applicant = true;
 	const handleClick = () => {
 		applicant = !applicant;
@@ -12,13 +11,13 @@
 			<h2 class="text-xl font-bold text-left">Dashboard</h2>
 			<div class="tabs">
 				<a
-					href={`/admin/dashboard/${applicant ? 'qualifieds' : 'applicants'}`}
+					href='/admin/dashboard/applicants'
 					class="tab tab-bordered tab-active"
 					class:tab-active={applicant}
 					on:click={handleClick}>Applicant</a
 				>
 				<a
-					href={`/admin/dashboard/${!applicant ? 'qualifieds' : 'applicants'}`}
+					href='/admin/dashboard/qualifieds'
 					class="tab tab-bordered"
 					class:tab-active={!applicant}
 					on:click={handleClick}>Qualified</a
@@ -27,7 +26,6 @@
 			<div class="flex-1 overflow-scroll">
 				<slot />
 			</div>
-			<div>{$message}</div>
 		</div>
 	</div>
 </div>

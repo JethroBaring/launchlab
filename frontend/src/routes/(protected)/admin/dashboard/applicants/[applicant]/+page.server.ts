@@ -1,6 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
-import { message } from '../../../../../../stores/message';
 
 export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 	const response = await fetch(`http://127.0.0.1:8000/applicants/${params.applicant}/`, {

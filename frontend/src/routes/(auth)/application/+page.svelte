@@ -29,11 +29,6 @@
 		formData.eligibility = !formData.eligibility;
 	};
 
-
-
-
-	
-	console.log(form?.credentials);
 </script>
 
 <svelte:head>
@@ -96,7 +91,7 @@
 				{/if}
 			</div>
 			{#if form?.credentials}
-				<p>invalid credentials</p>
+				<p>all fields are required</p>
 			{/if}
 		</form>
 	</div>

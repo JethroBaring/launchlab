@@ -5,7 +5,7 @@
 	<div class="flex flex-col flex-1 gap-10">
 		<div class="flex flex-col gap-3 overflow-scroll h-full">
 			<div class="flex gap-5 items-center">
-                <a href="/admin/dashboard/applicants"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <a href="/admin/dashboard/qualifieds"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                   </svg>
                   </a>
@@ -21,14 +21,6 @@
                     <p>{data.info.member_3_name}</p>
                     <p>{data.info.member_4_name}</p>
                     <p>{data.info.member_5_name}</p>
-                </div>
-                <div class="flex gap-5">
-                    <form action={`/admin/dashboard/applicants/${data.params}?/reject`} method="post">
-                        <button class="btn btn-warning btn-custom">reject</button>
-                    </form>
-                    <form action={`/admin/dashboard/applicants/${data.params}?/approve`} method="post">
-                        <button class="btn btn-success btn-custom">accept</button>
-                    </form>
                 </div>
             </div>
 		</div>
