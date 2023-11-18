@@ -12,7 +12,7 @@
                 <h2 class="text-xl font-bold text-left">{data.info.starup_name}</h2>
             </div>
 			<div class="flex-1 overflow-scroll">
-                <h1>Mobile Information</h1>
+                <h1>{data.info.starup_name}'s information</h1>
                 <h2>Group Name: {data.info.group_name}</h2>
                 <p>Leader: {data.info.member_1_name}</p>
                 <div>
