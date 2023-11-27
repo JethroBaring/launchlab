@@ -45,7 +45,6 @@ export const adminSidebarLinks = [
 		route: 'admin/dashboard/applicants',
 		label: 'Dashboard'
 	}
-
 ];
 
 export const groupInformation = [
@@ -142,7 +141,7 @@ export const technologyReadinessLevel = [
 		question: 'Is a specific technological idea formulated? ',
 		level: 1
 	}
-]
+];
 
 export const marketReadinessLevel = [
 	{
@@ -181,4 +180,121 @@ export const marketReadinessLevel = [
 		question: 'Is a specific technological idea formulated? ',
 		level: 1
 	}
-]
+];
+
+export const regulatoryReadinessLevel = [
+	{
+		question: 'Is use and production of the technology regulatory unproblematic? ',
+		level: 9
+	},
+	{
+		question: 'Does use and production of the technology fulfill general requirements? ',
+		level: 8
+	},
+	{
+		question: 'Are the necessary approvals/permissions close to be given? ',
+		level: 7
+	},
+	{
+		question: 'Are needed approvals/permissions likely?',
+		level: 6
+	},
+	{
+		question: 'Will use of the technology require easily accessible permissions? ',
+		level: 5
+	},
+	{
+		question: 'Will use of the technology require demanding permissions/approvals? ',
+		level: 4
+	},
+	{
+		question: 'Will use of the technology require regulatory changes? ',
+		level: 3
+	},
+	{
+		question: 'Will use of the technology demand legal changes?',
+		level: 2
+	},
+	{
+		question: 'Are the legal and regulatory aspects of the technology unpredictable/unknown?',
+		level: 1
+	}
+];
+
+export const acceptanceReadinessLevel = [
+	{
+		question: 'Is use and production of the technology socially accepted in general?',
+		level: 9
+	},
+	{
+		question: 'Is use of the technology seen as questionable within marginal interest groups? ',
+		level: 8
+	},
+	{
+		question: 'Is the technology seen as questionable in parts of the sector? ',
+		level: 7
+	},
+	{
+		question: 'Is the technology seen as questionable by a few actors in the sector? ',
+		level: 6
+	},
+	{
+		question: 'Is the technology seen as questionable among key actors in the sector?',
+		level: 5
+	},
+	{
+		question: 'Is the technology seen as questionable among groups of the population? ',
+		level: 4
+	},
+	{
+		question: 'Is the technology seen as very questionable among groups of the population?',
+		level: 3
+	},
+	{
+		question: 'Is the technology controversial among large part of the population? ',
+		level: 2
+	},
+	{
+		question: 'Will the technology be seen as illegitimate or socially unacceptable?',
+		level: 1
+	}
+];
+
+export const organizationalReadinessLevel = [
+	{
+		question: 'Can the technology be used seamlessly together with existing technologies?',
+		level: 9
+	},
+	{
+		question: 'Is the technology adapted to work processes and/or other technologies?',
+		level: 8
+	},
+	{
+		question: 'Are only minor organizational changes needed?',
+		level: 7
+	},
+	{
+		question: 'Are major organizational changes needed for the technology to be used?',
+		level: 6
+	},
+	{
+		question: 'Is there a plan for integration of the technology with existing work-processes?',
+		level: 5
+	},
+	{
+		question: 'Has a potential integration and domestication of the technology been described? ',
+		level: 4
+	},
+	{
+		question: 'Has an idea regarding integration/domestication been formulated?',
+		level: 3
+	},
+	{
+		question: 'Is the integration with existing work processes unclear or problematic? ',
+		level: 2
+	},
+	{
+		question: 'Will the technology represent a fundamental break with existing work processes?',
+		level: 1
+	}
+];

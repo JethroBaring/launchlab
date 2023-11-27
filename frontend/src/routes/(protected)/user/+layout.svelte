@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { TopBar, LeftSideBar, BottomBar } from '$lib/components/shared';
 	import { userSidebarLinks } from '$lib/constants';
 	export let data
@@ -8,7 +8,7 @@
 	<div class="w-full md:flex">
 		<TopBar />
 		<LeftSideBar sidebarLinks={userSidebarLinks} name={data.user.startupName ?? ""}  type={data.user.type}/>
-		<div class="flex flex-1 h-full">
+		<div class="flex flex-1 h-full p-10">
 			<slot />
 		</div>
 		<BottomBar bottomBarLinks={userSidebarLinks} />

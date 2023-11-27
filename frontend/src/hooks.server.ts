@@ -13,7 +13,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			const response = await fetch('http://127.0.0.1:8000/tokens/refresh/', {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${refresh}`,
+					'Authorization': `Bearer ${refresh}`,
 					'Content-Type': 'application/json' // Add this line
 				},
 				body: JSON.stringify({
