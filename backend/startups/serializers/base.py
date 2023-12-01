@@ -1,22 +1,44 @@
 from rest_framework import serializers
 from startups import models as startups_models
-from users import models as users_models
+from drf_yasg.utils import swagger_serializer_method
 
-class ApplicantBaseSerializer(serializers.ModelSerializer):
+
+class StartupMemberBaseSerializer(serializers.ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(source="user", read_only=True)
+    startup_id = serializers.PrimaryKeyRelatedField(source="startup", read_only=True)
+
     class Meta:
-        model = startups_models.Applicant
-        fields = "__all__"
+        model = startups_models.StartupMember
+        fields = ["id", "email", "user_id", "startup_id"]
 
 
 class StartupBaseSerializer(serializers.ModelSerializer):
-    user_id = serializers.PrimaryKeyRelatedField(read_only=True, source="user")
-    applicant_id = serializers.PrimaryKeyRelatedField(
-        read_only=True, source="applicant"
-    )
+    user_id = serializers.PrimaryKeyRelatedField(source="user", read_only=True)
+    members = serializers.SerializerMethodField(method_name="_members")
 
     class Meta:
         model = startups_models.Startup
-        fields = ["name", "user_id", "applicant_id"]
+        fields = [
+            "id",
+            "name",
+            "user_id",
+            "is_qualified",
+            "data_privacy",
+            "capsule_proposal",
+            "links",
+            "group_name",
+            "member_1_name",
+            "member_1_number",
+            "member_1_email",
+            "university_name",
+            "eligibility",
+            "members",
+        ]
+
+    @swagger_serializer_method(StartupMemberBaseSerializer())
+    def _members(self, startup):
+        return StartupMemberBaseSerializer(startup.members.all(), many=True).data
+
 
 class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
     startup_id = serializers.PrimaryKeyRelatedField(

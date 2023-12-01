@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from users import managers
 
 
-class User(AbstractBaseUser, BaseModel):
+class BaseUser(AbstractBaseUser, BaseModel):
     class UserType(models.TextChoices):
         MANAGER = "M", _("Manager")
         STARTUP = "S", _("Startup")
@@ -23,6 +23,14 @@ class User(AbstractBaseUser, BaseModel):
         choices=UserType.choices,
     )
 
-    objects = managers.UserManager()
+    objects = managers.CustomBaseUserManager()
 
     USERNAME_FIELD = "email"
+
+
+class ManagerUser(BaseUser):
+    objects = managers.ManagerUserManager()
+
+
+class StartupUser(BaseUser):
+    objects = managers.StartupUserManager()
