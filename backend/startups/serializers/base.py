@@ -59,3 +59,20 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
             "irl",
             "datetime_created",
         ]
+
+
+class InitialReadinessLevelBaseSerializer(serializers.ModelSerializer):
+    startup_id = serializers.PrimaryKeyRelatedField(source="startup", read_only=True)
+
+    class Meta:
+        model = startups_models.InitialReadinessLevel
+        fields = [
+            "id",
+            "startup_id",
+            "trl",
+            "orl",
+            "mrl",
+            "rrl",
+            "arl",
+            "irl",
+        ]

@@ -49,3 +49,15 @@ class ReadinessLevel(BaseModel):
     rrl = models.IntegerField(default=0)
     arl = models.IntegerField(default=0)
     irl = models.IntegerField(default=0)
+
+
+class InitialReadinessLevel(BaseModel):
+    startup = models.OneToOneField(
+        Startup, on_delete=models.CASCADE, related_name="initial_readiness_level"
+    )
+    trl = models.CharField(max_length=10)
+    orl = models.CharField(max_length=10)
+    mrl = models.CharField(max_length=10)
+    rrl = models.CharField(max_length=10)
+    arl = models.CharField(max_length=10)
+    irl = models.CharField(max_length=10)
