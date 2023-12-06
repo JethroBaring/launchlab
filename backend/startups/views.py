@@ -233,3 +233,11 @@ class ReadinessLevelViewSet(
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class InitialReadinessLevelViewSet(mixins.UpdateModelMixin, BaseViewSet):
+    queryset = startups_models.InitialReadinessLevel.objects
+    serializer_class = startups_serializers.base.InitialReadinessLevelBaseSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)

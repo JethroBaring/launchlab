@@ -15,6 +15,9 @@ class StartupMemberBaseSerializer(serializers.ModelSerializer):
 class StartupBaseSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(source="user", read_only=True)
     members = serializers.SerializerMethodField(method_name="_members")
+    initial_readiness_level_id = serializers.PrimaryKeyRelatedField(
+        source="initial_readiness_level", read_only=True, allow_null=True
+    )
 
     class Meta:
         model = startups_models.Startup
@@ -33,6 +36,7 @@ class StartupBaseSerializer(serializers.ModelSerializer):
             "university_name",
             "eligibility",
             "members",
+            "initial_readiness_level_id",
         ]
 
     @swagger_serializer_method(StartupMemberBaseSerializer())
