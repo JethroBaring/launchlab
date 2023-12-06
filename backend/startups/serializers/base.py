@@ -69,6 +69,12 @@ class InitialReadinessLevelBaseSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "startup_id",
+            "trl_response",
+            "orl_response",
+            "mrl_response",
+            "rrl_response",
+            "arl_response",
+            "irl_response",
             "trl",
             "orl",
             "mrl",
