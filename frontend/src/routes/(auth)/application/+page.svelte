@@ -3,96 +3,70 @@
 		DataPrivacy,
 		ProjectDetails,
 		GroupInformation,
-		EligibilityAgreement
+		EligibilityAgreement,
+		Technology,
+		Market,
+		Regulatory,
+		Acceptance,
+		Organizational,
+		Investment
 	} from '$lib/components/application';
+	import ApplicationForm from '$lib/components/application/ApplicationForm.svelte';
+	import Image from '$lib/components/application/Image.svelte';
 	import type { ActionData } from './$types';
 	export let form: ActionData;
 
-	let steps = ['data-privacy', 'project-details', 'group-information', 'eligibility-agreement'],
-		currentActive = 0;
-
-	let formData = {
-		dataPrivacy: false,
-		eligibility: false,
-	};
+	let steps = [
+			'data-privacy',
+			'project-details',
+			'group-information',
+			'eligibility-agreement',
+			'technology',
+			'market',
+			'regulatory',
+			'acceptance',
+			'organizational',
+			'investment',
+			'trl-calculator'
+		],
+		currentActive = 10;
 
 	const handleStep = (stepIncrement: number) => {
 		currentActive += stepIncrement;
 		console.log(steps[currentActive]);
 	};
 
-	const toggleDataPrivacy = () => {
-		formData.dataPrivacy = !formData.dataPrivacy;
-	};
-
-	const toggleEligibility = () => {
-		formData.eligibility = !formData.eligibility;
-	};
-
+	const labels = [
+		'Data Privacy and Consent',
+		'Project Details',
+		'Group Information',
+		'Eligibility and Agreement',
+		'Technology Readiness Level',
+		'Market Readiness Level',
+		'Regulatory Readiness Level',
+		'Acceptance Readiness Level',
+		'Organizational Readiness Level',
+		'Investment Readiness Level',
+		'Technology Readiness Calculator'
+	];
 </script>
 
 <svelte:head>
 	<title>Application</title>
 </svelte:head>
 
-
-<div class="flex-1 flex-col h-full rounded-inherit flex items-center justify-center">
-	<div class="p-5 flex gap-2 cursor-pointer items-center w-full">
+<div class="flex-1 flex-col h-full rounded-inherit flex items-center relative">
+	<div class="p-5 flex gap-2 cursor-pointer items-center w-full absolute">
 		<img src="launchlab_logo.png" alt="citeams_logo" class="w-8" />
-		<a href="/" class="cursor-pointer font-black normal-case text-2xl">LaunchLab</a>
+		<a href="/" class="cursor-pointer font-black normal-case text-2xl">ChumCheck</a>
 	</div>
-	<img src="startup.png" alt="" class="flex-1 w-4/5 scale-x-[-1]" />
+	<div class="flex-1 flex items-center justify-center">
+		<Image {currentActive} {steps} />
+	</div>
 </div>
 <div class="flex-1 flex flex-col gap-5 items-center justify-between h-full">
 	<div class="flex-1 flex flex-col w-full p-10">
-		{#if currentActive === 0}
-			<h1 class="text-2xl font-semibold mb-5 px-6">Data Privacy and Consent</h1>
-		{:else if currentActive === 1}
-			<h1 class="text-2xl font-semibold mb-5 px-6">Project Details</h1>
-		{:else if currentActive === 2}
-			<h1 class="text-2xl font-semibold mb-5 px-6">Group Information</h1>
-		{:else if currentActive === 3}
-			<h1 class="text-2xl font-semibold mb-5 px-6">Eligibility and Agreement</h1>
-		{/if}
-		<form
-			action="?/application"
-			method="post"
-			class="flex-1 flex flex-col"
-			enctype="multipart/form-data"
-		>
-			<DataPrivacy dataPrivacy={formData.dataPrivacy} {toggleDataPrivacy} {currentActive} />
-			<ProjectDetails {currentActive}/>
-			<GroupInformation {currentActive}/>
-			<EligibilityAgreement
-				{toggleEligibility}
-				eligibility={formData.eligibility}
-				{currentActive}
-			/>
-
-			<div class="flex gap-3 justify-end">
-				{#if currentActive != 0}
-					<button class="btn" on:click|preventDefault={() => handleStep(-1)}>Prev</button>
-				{/if}
-
-				{#if currentActive < steps.length - 1}
-					<button
-						class="btn"
-						on:click|preventDefault={() => handleStep(1)}
-						type="submit"
-						disabled={!formData.dataPrivacy}>Next</button
-					>
-				{:else}
-					<button
-						class="btn btn-primary"
-						type="submit"
-						disabled={!formData.eligibility}
-						>Submit</button
-					>
-				{/if}
-			</div>
-			{#if form?.credentials}
-				<p>all fields are required</p>
-			{/if}
-		</form>
+		<h1 class="text-2xl font-semibold mb-5 px-6">{labels[currentActive]}</h1>
+		<ApplicationForm {form} {steps} {handleStep} {currentActive} />
 	</div>
 </div>

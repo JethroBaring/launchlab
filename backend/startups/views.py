@@ -23,7 +23,7 @@ class StartupViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, BaseViewS
     def get_permissions(self):
         viewset_action = self.action
 
-        if viewset_action == "create":
+        if viewset_action in ["create","create_initial_readiness_level"]:
             return []
 
         return super().get_permissions()
@@ -144,7 +144,7 @@ class StartupViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, BaseViewS
     @action(url_path="create-initial-readiness-level", detail=True, methods=["POST"])
     def create_initial_readiness_level(self, request, pk):
         startup = self.get_object()
-
+        
         request_serializer = (
             startups_serializers.base.InitialReadinessLevelBaseSerializer(
                 data=request.data
@@ -238,6 +238,6 @@ class ReadinessLevelViewSet(
 class InitialReadinessLevelViewSet(mixins.UpdateModelMixin, BaseViewSet):
     queryset = startups_models.InitialReadinessLevel.objects
     serializer_class = startups_serializers.base.InitialReadinessLevelBaseSerializer
-
+    
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)

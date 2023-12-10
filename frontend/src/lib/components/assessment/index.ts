@@ -1,5 +1,6 @@
-export { default as AcceptanceRL } from './acceptanceRL.svelte';
-export { default as MarketRL } from './marketRL.svelte';
-export { default as OrganizationalRL } from './organizationalRL.svelte';
-export { default as RegulatoryRL } from './regulatoryRL.svelte';
-export { default as TechnologyRL } from './technologyRL.svelte';
+export { default as TechnologyAssessment } from './TechnologyAssessment.svelte'
+export { default as MarketAssessment } from './MarketAssessment.svelte'
+export { default as RegulatoryAssessment } from './RegulatoryAssessment.svelte'
+export { default as OrganizationalAssessment } from './OrganizationalAssessment.svelte'
+export { default as InvestmentAssessment } from './InvestmentAssessment.svelte'
+export { default as AcceptanceAssessment } from './AcceptanceAssessment.svelte'

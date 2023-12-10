@@ -8,8 +8,6 @@ declare global {
 				id: number,
 				type: string,
 				email: string,
-				startupId?: number,
-				startupName?: string,
 				firstName: string,
 				lastName: string
 			}

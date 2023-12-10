@@ -5,7 +5,9 @@ export default {
     extend: {
       colors: {
         'flutter-blue': '#1C83E5',
-        'flutter-dark': '#0B213E'
+        'flutter-dark': '#0B213E',
+        'silver':"#808080",
+        "bronze":"#92400e"
       },
       fontFamily: {
         'Inter': ['Inter', 'sans-serif']

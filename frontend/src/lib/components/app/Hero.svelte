@@ -9,7 +9,7 @@
 			</p>
 			<a href="/application">
 				<button
-					class="btn btn-custom btn-primary btn-custom border-none normal-case text-white bg-flutter-blue w-32 shadow-lg shadow-flutter-blue/50"
+					class="btn btn-primary btn-custom border-none normal-case text-white bg-flutter-blue w-32 shadow-lg shadow-flutter-blue/50"
 				>
 					Apply Now!
 				</button></a
