@@ -1,9 +1,15 @@
 from django.db import models
 from generic.models import BaseModel
 from users import models as users_models
+from readinesslevel import models as readinesslevel_models
 
 
 class Startup(BaseModel):
+    class QualificationStatus(models.IntegerChoices):
+        PENDING = 1
+        RATED = 2
+        QUALIFIED = 3
+
     name = models.CharField(max_length=300)
     user = models.ForeignKey(
         users_models.StartupUser,
@@ -12,7 +18,9 @@ class Startup(BaseModel):
         null=True,
         default=None,
     )
-    is_qualified = models.BooleanField(default=False)
+    qualification_status = models.IntegerField(
+        choices=QualificationStatus.choices, default=QualificationStatus.PENDING
+    )
     data_privacy = models.BooleanField(default=False)
     capsule_proposal = models.FileField(upload_to="capsule_proposals")
     links = models.TextField(null=True, blank=True)
@@ -23,6 +31,7 @@ class Startup(BaseModel):
 
     university_name = models.CharField(max_length=200, null=True, blank=True)
     eligibility = models.BooleanField(default=False)
+    mentors = models.ManyToManyField(users_models.MentorUser, related_name="startups")
 
 
 class StartupMember(BaseModel):
@@ -39,31 +48,40 @@ class StartupMember(BaseModel):
     )
 
 
-class ReadinessLevel(BaseModel):
+class StartupReadinessLevel(BaseModel):
     startup = models.ForeignKey(
         Startup, on_delete=models.CASCADE, related_name="readiness_levels"
     )
-    trl = models.IntegerField(default=0)
-    orl = models.IntegerField(default=0)
-    mrl = models.IntegerField(default=0)
-    rrl = models.IntegerField(default=0)
-    arl = models.IntegerField(default=0)
-    irl = models.IntegerField(default=0)
-
-
-class InitialReadinessLevel(BaseModel):
-    startup = models.OneToOneField(
-        Startup, on_delete=models.CASCADE, related_name="initial_readiness_level"
+    readiness_level = models.ForeignKey(
+        readinesslevel_models.ReadinessLevel,
+        on_delete=models.CASCADE,
+        related_name="startups_level",
     )
-    trl_response = models.JSONField(blank=True, null=True)
-    orl_response = models.JSONField(blank=True, null=True)
-    mrl_response = models.JSONField(blank=True, null=True)
-    rrl_response = models.JSONField(blank=True, null=True)
-    arl_response = models.JSONField(blank=True, null=True)
-    irl_response = models.JSONField(blank=True, null=True)
-    trl = models.CharField(max_length=10, blank=True, null=True)
-    orl = models.CharField(max_length=10, blank=True, null=True)
-    mrl = models.CharField(max_length=10, blank=True, null=True)
-    rrl = models.CharField(max_length=10, blank=True, null=True)
-    arl = models.CharField(max_length=10, blank=True, null=True)
-    irl = models.CharField(max_length=10, blank=True, null=True)
+
+
+class URATQuestionAnswer(BaseModel):
+    startup = models.ForeignKey(
+        Startup, on_delete=models.CASCADE, related_name="urat_question_answers"
+    )
+    urat_question = models.ForeignKey(
+        readinesslevel_models.URATQuestion,
+        on_delete=models.CASCADE,
+        related_name="answers",
+    )
+    respone = models.CharField(max_length=500)
+    score = models.SmallIntegerField()
+
+
+class ReadinessLevelCriterionAnswer(BaseModel):
+    startup = models.ForeignKey(
+        Startup,
+        on_delete=models.CASCADE,
+        related_name="readiness_evel_criterion_answers",
+    )
+    criterion = models.ForeignKey(
+        readinesslevel_models.LevelCriterion,
+        on_delete=models.CASCADE,
+        related_name="answers",
+    )
+    score = models.SmallIntegerField()
+    remark = models.CharField(max_length=500, null=True, blank=True)

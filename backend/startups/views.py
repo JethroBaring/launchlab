@@ -13,9 +13,11 @@ from django.db.models import Q
 from startups import utils as startups_utils
 
 
-# TODO:
-# add permissions
-class StartupViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, BaseViewSet):
+class StartupViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    BaseViewSet,
+):
     queryset = startups_models.Startup.objects
     serializer_class = startups_serializers.base.StartupBaseSerializer
     parser_classes = (MultiPartParser, FormParser, JSONParser)
@@ -134,78 +136,97 @@ class StartupViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, BaseViewS
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        rquest_body=startups_serializers.base.InitialReadinessLevelBaseSerializer,
-        responses={
-            200: startups_serializers.base.InitialReadinessLevelBaseSerializer(),
-            400: "Only One Initial Readiness Level is allowed.",
-        },
-    )
-    @action(url_path="create-initial-readiness-level", detail=True, methods=["POST"])
-    def create_initial_readiness_level(self, request, pk):
+    def partial_update(self, request, *args, **kwargs):
         startup = self.get_object()
 
         request_serializer = (
-            startups_serializers.base.InitialReadinessLevelBaseSerializer(
+            startups_serializers.request.UpdateStartupRequestSerializer(
                 data=request.data
             )
         )
         request_serializer.is_valid(raise_exception=True)
 
-        has_initial_readiness_level = (
-            startups_models.InitialReadinessLevel.objects.filter(
-                startup_id=startup.id
-            ).exists()
-        )
-        if has_initial_readiness_level:
-            return Response(
-                "Only One Initial Readiness Level is allowed.",
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        initial_readiness_level = startups_models.InitialReadinessLevel.objects.create(
-            startup_id=startup.id, **request_serializer.validated_data
+        qualification_status = request_serializer.validated_data.get(
+            "qualification_status"
         )
 
-        return Response(
-            startups_serializers.base.InitialReadinessLevelBaseSerializer(
-                initial_readiness_level
-            ).data,
-            status=status.HTTP_201_CREATED,
-        )
+        startup.qualification_status = qualification_status
+        startup.save(update_fields=["qualification_status"])
 
-    @swagger_auto_schema(
-        responses={
-            200: startups_serializers.base.InitialReadinessLevelBaseSerializer(),
-        },
-    )
-    @action(url_path="retrieve-initial-readiness-level", detail=True, methods=["GET"])
-    def retrieve_initial_readiness_level(self, request, pk):
-        startup = self.get_object()
+        return Response(self.serializer_class(startup).data, status=status.HTTP_200_OK)
 
-        initial_readiness_level = startups_models.InitialReadinessLevel.objects.filter(
-            startup_id=startup.id
-        ).first()
+    # @swagger_auto_schema(
+    #     rquest_body=startups_serializers.base.InitialReadinessLevelBaseSerializer,
+    #     responses={
+    #         200: startups_serializers.base.InitialReadinessLevelBaseSerializer(),
+    #         400: "Only One Initial Readiness Level is allowed.",
+    #     },
+    # )
+    # @action(url_path="create-initial-readiness-level", detail=True, methods=["POST"])
+    # def create_initial_readiness_level(self, request, pk):
+    #     startup = self.get_object()
 
-        return Response(
-            startups_serializers.base.InitialReadinessLevelBaseSerializer(
-                initial_readiness_level
-            ).data,
-            status=status.HTTP_201_CREATED,
-        )
+    #     request_serializer = (
+    #         startups_serializers.base.InitialReadinessLevelBaseSerializer(
+    #             data=request.data
+    #         )
+    #     )
+    #     request_serializer.is_valid(raise_exception=True)
+
+    #     has_initial_readiness_level = (
+    #         startups_models.InitialReadinessLevel.objects.filter(
+    #             startup_id=startup.id
+    #         ).exists()
+    #     )
+    #     if has_initial_readiness_level:
+    #         return Response(
+    #             "Only One Initial Readiness Level is allowed.",
+    #             status=status.HTTP_400_BAD_REQUEST,
+    #         )
+
+    #     initial_readiness_level = startups_models.InitialReadinessLevel.objects.create(
+    #         startup_id=startup.id, **request_serializer.validated_data
+    #     )
+
+    #     return Response(
+    #         startups_serializers.base.InitialReadinessLevelBaseSerializer(
+    #             initial_readiness_level
+    #         ).data,
+    #         status=status.HTTP_201_CREATED,
+    #     )
+
+    # @swagger_auto_schema(
+    #     responses={
+    #         200: startups_serializers.base.InitialReadinessLevelBaseSerializer(),
+    #     },
+    # )
+    # @action(url_path="retrieve-initial-readiness-level", detail=True, methods=["GET"])
+    # def retrieve_initial_readiness_level(self, request, pk):
+    #     startup = self.get_object()
+
+    #     initial_readiness_level = startups_models.InitialReadinessLevel.objects.filter(
+    #         startup_id=startup.id
+    #     ).first()
+
+    #     return Response(
+    #         startups_serializers.base.InitialReadinessLevelBaseSerializer(
+    #             initial_readiness_level
+    #         ).data,
+    #         status=status.HTTP_201_CREATED,
+    #     )
 
 
-class ReadinessLevelViewSet(
+class UratQuestionAnswerViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet
 ):
-    queryset = startups_models.ReadinessLevel.objects
-    serializer_class = startups_serializers.base.ReadinessLevelBaseSerializer
+    queryset = startups_models.URATQuestionAnswer.objects
+    serializer_class = startups_serializers.base.UratQuestionAnswerBaseSerializer
 
     def get_queryset(self):
         queryset = super().get_queryset()
         request = self.request
 
-        serializer = startups_serializers.query.ReadinessLevelQuerySerializer(
+        serializer = startups_serializers.query.UratQuestionAnswerQuerySerializer(
             data=request.query_params
         )
 
@@ -216,28 +237,135 @@ class ReadinessLevelViewSet(
 
         return queryset.all()
 
-    @swagger_auto_schema(
-        request_body=serializer_class(),
-        responses={
-            200: serializer_class(),
-        },
-    )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        query_serializer=startups_serializers.query.ReadinessLevelQuerySerializer,
-        responses={
-            200: serializer_class(),
-        },
-    )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    def partial_update(self, request, *args, **kwargs):
+        urat_question_answer = self.get_object()
 
-class InitialReadinessLevelViewSet(mixins.UpdateModelMixin, BaseViewSet):
-    queryset = startups_models.InitialReadinessLevel.objects
-    serializer_class = startups_serializers.base.InitialReadinessLevelBaseSerializer
+        request_serializer = (
+            startups_serializers.request.UpdateUratQuestionAnswerRequestSerializer(
+                data=request.data
+            )
+        )
+        request_serializer.is_valid(raise_exception=True)
+
+        score = request_serializer.validated_data.get("score")
+
+        urat_question_answer.score = score
+        urat_question_answer.save(update_fields=["score"])
+
+        return Response(
+            self.serializer_class(urat_question_answer).data, status=status.HTTP_200_OK
+        )
+
+
+class ReadinessLevelCriterionAnswerViewSet(
+    mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet
+):
+    queryset = startups_models.ReadinessLevelCriterionAnswer.objects
+    serializer_class = (
+        startups_serializers.base.ReadinessLevelCriterionAnswerBaseSerializer
+    )
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        request = self.request
+
+        serializer = (
+            startups_serializers.query.ReadinessLevelCriterionAnswerQuerySerializer(
+                data=request.query_params
+            )
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        startup_id = serializer.validated_data.get("startup_id")
+        if startup_id:
+            queryset = queryset.filter(startup_id=startup_id)
+
+        criterion_id = serializer.validated_data.get("criterion_id")
+        if criterion_id:
+            queryset = queryset.filter(criterion_id=criterion_id)
+
+        return queryset.all()
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
+        readinesslevel_criterion_answer = self.get_object()
+
+        request_serializer = (
+            startups_serializers.request.ReadinessLevelCriterionAnswerRequestSerializer(
+                data=request.data
+            )
+        )
+        request_serializer.is_valid(raise_exception=True)
+
+        score = request_serializer.validated_data.get("score")
+        remark = request_serializer.validated_data.get("remark")
+
+        readinesslevel_criterion_answer.score = score
+        readinesslevel_criterion_answer.remark = remark
+
+        readinesslevel_criterion_answer.save(update_fields=["score", "remark"])
+
+        return Response(
+            self.serializer_class(readinesslevel_criterion_answer).data,
+            status=status.HTTP_200_OK,
+        )
+
+
+# class ReadinessLevelViewSet(
+#     mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet
+# ):
+#     queryset = startups_models.ReadinessLevel.objects
+#     serializer_class = startups_serializers.base.ReadinessLevelBaseSerializer
+
+#     def get_queryset(self):
+#         queryset = super().get_queryset()
+#         request = self.request
+
+#         serializer = startups_serializers.query.ReadinessLevelQuerySerializer(
+#             data=request.query_params
+#         )
+
+#         serializer.is_valid(raise_exception=True)
+#         startup_id = serializer.validated_data.get("startup_id")
+#         if startup_id:
+#             queryset = queryset.filter(startup_id=startup_id)
+
+#         return queryset.all()
+
+#     @swagger_auto_schema(
+#         request_body=serializer_class(),
+#         responses={
+#             200: serializer_class(),
+#         },
+#     )
+#     def create(self, request, *args, **kwargs):
+#         return super().create(request, *args, **kwargs)
+
+#     @swagger_auto_schema(
+#         query_serializer=startups_serializers.query.ReadinessLevelQuerySerializer,
+#         responses={
+#             200: serializer_class(),
+#         },
+#     )
+#     def list(self, request, *args, **kwargs):
+#         return super().list(request, *args, **kwargs)
+
+
+# class InitialReadinessLevelViewSet(mixins.UpdateModelMixin, BaseViewSet):
+#     queryset = startups_models.InitialReadinessLevel.objects
+#     serializer_class = startups_serializers.base.InitialReadinessLevelBaseSerializer
+
+#     def partial_update(self, request, *args, **kwargs):
+#         return super().partial_update(request, *args, **kwargs)

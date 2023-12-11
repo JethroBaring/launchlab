@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from startups.urls import urlpatterns as startups_urlpatterns
 from users.urls import urlpatterns as users_urlpatterns
+from readinesslevel.urls import urlpatterns as readinesslevels_urlpatterns
 from rest_framework import permissions
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -36,6 +37,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(startups_urlpatterns)),
     path("user/", include(users_urlpatterns)),
+    path("readinesslevel/", include(readinesslevels_urlpatterns)),
     path("tokens/acquire/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("tokens/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

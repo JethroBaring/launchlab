@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from startups import models as startups_models
 from drf_yasg.utils import swagger_serializer_method
+from readinesslevel import models as readinesslevel_models
 
 
 class StartupMemberBaseSerializer(serializers.ModelSerializer):
@@ -25,7 +26,7 @@ class StartupBaseSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "user_id",
-            "is_qualified",
+            "qualification_status",
             "data_privacy",
             "capsule_proposal",
             "links",
@@ -44,45 +45,85 @@ class StartupBaseSerializer(serializers.ModelSerializer):
         return StartupMemberBaseSerializer(startup.members.all(), many=True).data
 
 
-class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
+class UratQuestionAnswerBaseSerializer(serializers.ModelSerializer):
     startup_id = serializers.PrimaryKeyRelatedField(
         source="startup", queryset=startups_models.Startup.objects
     )
-    irl = serializers.IntegerField(read_only=True)
+    urat_question_id = serializers.PrimaryKeyRelatedField(
+        source="urat_question", queryset=readinesslevel_models.URATQuestion.objects
+    )
+    score = serializers.IntegerField(read_only=True)
 
     class Meta:
-        model = startups_models.ReadinessLevel
+        model = startups_models.URATQuestionAnswer
         fields = [
             "id",
             "startup_id",
-            "trl",
-            "orl",
-            "mrl",
-            "rrl",
-            "arl",
-            "irl",
-            "datetime_created",
+            "urat_question_id",
+            "response",
+            "score",
         ]
 
 
-class InitialReadinessLevelBaseSerializer(serializers.ModelSerializer):
-    startup_id = serializers.PrimaryKeyRelatedField(source="startup", read_only=True)
+class ReadinessLevelCriterionAnswerBaseSerializer(serializers.ModelSerializer):
+    startup_id = serializers.PrimaryKeyRelatedField(
+        source="startup", queryset=startups_models.Startup.objects
+    )
+    criterion_id = serializers.PrimaryKeyRelatedField(
+        source="criterion", queryset=readinesslevel_models.LevelCriterion.objects
+    )
+    remark = serializers.CharField(required=False)
 
     class Meta:
-        model = startups_models.InitialReadinessLevel
+        model = startups_models.ReadinessLevelCriterionAnswer
         fields = [
             "id",
             "startup_id",
-            "trl_response",
-            "orl_response",
-            "mrl_response",
-            "rrl_response",
-            "arl_response",
-            "irl_response",
-            "trl",
-            "orl",
-            "mrl",
-            "rrl",
-            "arl",
-            "irl",
+            "criterion_id",
+            "score",
+            "remark",
         ]
+
+
+# class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
+#     startup_id = serializers.PrimaryKeyRelatedField(
+#         source="startup", queryset=startups_models.Startup.objects
+#     )
+#     irl = serializers.IntegerField(read_only=True)
+
+#     class Meta:
+#         model = startups_models.ReadinessLevel
+#         fields = [
+#             "id",
+#             "startup_id",
+#             "trl",
+#             "orl",
+#             "mrl",
+#             "rrl",
+#             "arl",
+#             "irl",
+#             "datetime_created",
+#         ]
+
+
+# class InitialReadinessLevelBaseSerializer(serializers.ModelSerializer):
+#     startup_id = serializers.PrimaryKeyRelatedField(source="startup", read_only=True)
+
+#     class Meta:
+#         model = startups_models.InitialReadinessLevel
+#         fields = [
+#             "id",
+#             "startup_id",
+#             "trl_response",
+#             "orl_response",
+#             "mrl_response",
+#             "rrl_response",
+#             "arl_response",
+#             "irl_response",
+#             "trl",
+#             "orl",
+#             "mrl",
+#             "rrl",
+#             "arl",
+#             "irl",
+#         ]

@@ -9,6 +9,7 @@ class BaseUser(AbstractBaseUser, BaseModel):
     class UserType(models.TextChoices):
         MANAGER = "M", _("Manager")
         STARTUP = "S", _("Startup")
+        MENTOR = "ME", _("Mentor")
 
     username = None
     email = models.EmailField(max_length=254, unique=True)
@@ -19,7 +20,7 @@ class BaseUser(AbstractBaseUser, BaseModel):
     )
     user_type = models.CharField(
         "User Type",
-        max_length=1,
+        max_length=2,
         choices=UserType.choices,
     )
 
@@ -34,3 +35,7 @@ class ManagerUser(BaseUser):
 
 class StartupUser(BaseUser):
     objects = managers.StartupUserManager()
+
+
+class MentorUser(BaseUser):
+    objects = managers.MentorUserManager()

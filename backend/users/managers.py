@@ -27,3 +27,8 @@ class StartupUserManager(CustomBaseUserManager):
 class ManagerUserManager(CustomBaseUserManager):
     def create_user(self, email, password=None, **other_fields):
         return super().create_user(email, "M", password, **other_fields)
+
+
+class MentorUserManager(CustomBaseUserManager):
+    def create_user(self, email, password=None, **other_fields):
+        return super().create_user(email, "ME", password, **other_fields)

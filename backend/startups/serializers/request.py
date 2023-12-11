@@ -4,7 +4,7 @@ from startups.serializers import base as startups_base_serializers
 
 
 class StartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
-    is_qualified = serializers.BooleanField(read_only=True)
+    qualification_status = serializers.IntegerField(read_only=True)
     set_members = serializers.ListField(child=serializers.CharField(), write_only=True)
 
     class Meta:
@@ -13,7 +13,7 @@ class StartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
             "id",
             "name",
             "user_id",
-            "is_qualified",
+            "qualification_status",
             "data_privacy",
             "capsule_proposal",
             "links",
@@ -25,3 +25,18 @@ class StartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
             "eligibility",
             "set_members",
         ]
+
+
+class UpdateStartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
+    class Meta:
+        model = startups_models.Startup
+        fields = ["qualification_status"]
+
+
+class UpdateUratQuestionAnswerRequestSerializer(serializers.Serializer):
+    score = serializers.IntegerField()
+
+
+class ReadinessLevelCriterionAnswerRequestSerializer(serializers.Serializer):
+    score = serializers.IntegerField()
+    remake = serializers.CharField(required=False)
