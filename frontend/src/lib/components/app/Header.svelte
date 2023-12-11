@@ -29,7 +29,7 @@
 	<nav class="w-4/5 navbar px-0">
 		<div class="flex-1 flex gap-2 cursor-pointer">
 			<img src="launchlab_logo.png" alt="citeams_logo" class="w-8" />
-			<a href="/" class="cursor-pointer font-black normal-case text-2xl">LaunchLab</a>
+			<a href="/" class="cursor-pointer font-black normal-case text-2xl">ChumCheck</a>
 		</div>
 		<div class="flex-none font-semibold">
 			<ul class="flex gap-10 text-sm cursor-pointer items-center">
@@ -45,7 +45,7 @@
 				<li>
 					<a href="/login">
 						<button
-						class="btn btn-custom btn-primary btn-custom border-none normal-case text-white bg-flutter-blue shadow-lg shadow-flutter-blue/50"
+						class="btn btn-primary btn-custom border-none normal-case text-white bg-flutter-blue shadow-lg shadow-flutter-blue/50"
 					>
 						Login
 					</button></a>

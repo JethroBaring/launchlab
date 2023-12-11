@@ -127,6 +127,15 @@ REST_FRAMEWORK = {
     "DATETIME_INPUT_FORMATS": ["%m/%d/%Y %H:%M:%S GMT%z", "iso-8601"],
 }
 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+}
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Example: your frontend URL
+]
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

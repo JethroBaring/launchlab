@@ -2,7 +2,7 @@
   <footer class="footer py-4 border-t text-base-content ">
     <aside class="items-center grid-flow-col">
         <img src="launchlab_logo.png" alt="" class="w-8">
-        <p>LaunchLab <br/>Fueling Startup Success</p>
+        <p>ChumCheck <br/>Fueling Startup Success</p>
     </aside> 
     <nav class="md:place-self-center md:justify-self-end">
       <div class="grid grid-flow-col gap-4">

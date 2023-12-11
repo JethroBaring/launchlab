@@ -58,8 +58,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 					id: Number.parseInt(decoded.user_id!),
 					type: data?.user_type,
 					email: data?.email,
-					startupId: data?.startup_id,
-					startupName: data?.startup_name,
 					firstName: data?.first_name,
 					lastName: data?.last_name
 				};

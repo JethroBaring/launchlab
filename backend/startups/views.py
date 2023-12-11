@@ -25,7 +25,7 @@ class StartupViewSet(
     def get_permissions(self):
         viewset_action = self.action
 
-        if viewset_action == "create":
+        if viewset_action in ["create", "create_initial_readiness_level"]:
             return []
 
         return super().get_permissions()

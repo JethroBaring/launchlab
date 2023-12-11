@@ -23,6 +23,7 @@ def send_approval_email(email, **other_fields):
 
 def send_rejection_email(email):
     subject = "LaunchLab Application Status"
-    message = "Body of the email."
+    html_template = "rejectemailtemplate.html"
+    message = render_to_string(html_template)
     recipient_list = [email]
     send_email(subject, message, recipient_list)

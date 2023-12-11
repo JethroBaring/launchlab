@@ -3,6 +3,6 @@ import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
     if (locals.user) {
-		throw redirect(302, `/${locals.user.type === 'M' ? 'admin' : 'user'}/home`);
+		throw redirect(302, `/${locals.user.type === 'M' ? 'admin/overview' : 'user/home'}`);
 	}
 };
