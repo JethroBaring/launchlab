@@ -68,7 +68,7 @@ class URATQuestionAnswer(BaseModel):
         on_delete=models.CASCADE,
         related_name="answers",
     )
-    respone = models.CharField(max_length=500)
+    response = models.CharField(max_length=500)
     score = models.SmallIntegerField()
 
 
