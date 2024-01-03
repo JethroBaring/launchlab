@@ -41,9 +41,9 @@ class StartupViewSet(
 
         serializer.is_valid(raise_exception=True)
 
-        is_qualified = serializer.validated_data.get("is_qualified", None)
-        if is_qualified is not None:
-            queryset = queryset.filter(is_qualified=is_qualified)
+        qualification_status = serializer.validated_data.get("qualification_status", None)
+        if qualification_status is not None:
+            queryset = queryset.filter(qualification_status=qualification_status)
 
         if (
             not user.is_anonymous

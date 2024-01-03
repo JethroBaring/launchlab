@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 class StartupQuerySerializer(serializers.Serializer):
-    is_qualified = serializers.BooleanField(
+    qualification_status = serializers.CharField(
         required=False, allow_null=True, default=None
     )
 

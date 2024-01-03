@@ -21,7 +21,7 @@ class ReadinessLevel(BaseModel):
         ReadinessType, on_delete=models.CASCADE, related_name="readiness_levels"
     )
     level = models.SmallIntegerField()
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=500)
 
 
 class LevelCriterion(BaseModel):
@@ -29,11 +29,11 @@ class LevelCriterion(BaseModel):
         ReadinessLevel, on_delete=models.CASCADE, related_name="level_criteria"
     )
     criteria = models.CharField(max_length=100)
-    excellent_description = models.CharField(max_length=200)
-    good_description = models.CharField(max_length=200)
-    fair_description = models.CharField(max_length=200)
-    poor_description = models.CharField(max_length=200)
-    very_poor_description = models.CharField(max_length=200)
+    excellent_description = models.CharField(max_length=500)
+    good_description = models.CharField(max_length=500)
+    fair_description = models.CharField(max_length=500)
+    poor_description = models.CharField(max_length=500)
+    very_poor_description = models.CharField(max_length=500)
 
 
 class ScoringGuide(BaseModel):
@@ -42,7 +42,7 @@ class ScoringGuide(BaseModel):
     )
     start_range = models.SmallIntegerField()
     end_range = models.SmallIntegerField()
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=500)
 
 
 class URATQuestion(BaseModel):
