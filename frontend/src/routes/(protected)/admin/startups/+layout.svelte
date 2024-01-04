@@ -1,7 +1,7 @@
 <script lang="ts">
-	let applicant = true;
-	const handleClick = () => {
-		applicant = !applicant;
+	let current = 'pending'
+	const handleClick = (cur: string) => {
+		current = cur
 	};
 </script>
 
@@ -11,16 +11,22 @@
 			<h2 class="text-2xl font-bold text-left">Startups</h2>
 			<div class="tabs">
 				<a
-					href="/admin/startups/applicants"
+					href="/admin/startups/pending"
 					class="tab tab-bordered tab-active"
-					class:tab-active={applicant}
-					on:click={handleClick}>Applicant</a
+					class:tab-active={current === 'pending'}
+					on:click={() => handleClick('pending')}>Pending</a
 				>
 				<a
-					href="/admin/startups/qualifieds"
+					href="/admin/startups/qualified"
 					class="tab tab-bordered"
-					class:tab-active={!applicant}
-					on:click={handleClick}>Qualified</a
+					class:tab-active={current === 'rated'}
+					on:click={() => handleClick('rated')}>Rated</a
+				>
+				<a
+					href="/admin/startups/pending"
+					class="tab tab-bordered tab-active"
+					class:tab-active={current === 'qualified'}
+					on:click={() => handleClick('qualified')}>Qualified</a
 				>
 			</div>
 			<div class="flex-1 overflow-scroll">

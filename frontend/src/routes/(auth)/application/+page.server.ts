@@ -5,13 +5,13 @@ export const actions = {
 	application: async ({ request, fetch }) => {
 		const formData = await request.formData();
 
-		if (
-			!Object.values(formData)
-				.filter((key) => key !== 'links' && key !== 'university_name')
-				.every((value) => value !== undefined && value !== null && value !== '')
-		) {
-			return fail(400, { credentials: true });
-		}
+		// if (
+		// 	!Object.values(formData)
+		// 		.filter((key) => key !== 'links' && key !== 'university_name')
+		// 		.every((value) => value !== undefined && value !== null && value !== '')
+		// ) {
+		// 	return fail(400, { credentials: true });
+		// }
 		const newFormData = new FormData();
 		const members = ['member_2_email', 'member_3_email', 'member_4_email', 'member_5_email'];
 

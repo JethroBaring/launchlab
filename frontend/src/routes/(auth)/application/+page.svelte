@@ -27,7 +27,7 @@
 			'acceptance',
 			'organizational',
 			'investment',
-			'trl-calculator'
+			'calculator'
 		],
 		currentActive = 10;
 
@@ -47,7 +47,7 @@
 		'Acceptance Readiness Level',
 		'Organizational Readiness Level',
 		'Investment Readiness Level',
-		'Technology Readiness Calculator'
+		'Technology and Commercialization Readiness Level Calculator'
 	];
 </script>
 

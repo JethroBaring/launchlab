@@ -32,8 +32,8 @@
 				<!-- <p class="text-sm font-medium">{type === 'S' ? 'Startup' : 'Manager'}</p> -->
 					{#if type === 'S'}
 						<p>Startup</p>
-					{:else if  type === 'A'}
-						<p>Startup</p>
+					{:else if  type === 'M'}
+						<p>Admin</p>
 					{:else}
 						<p class="text-sm font-medium">Mentor</p>
 					{/if}

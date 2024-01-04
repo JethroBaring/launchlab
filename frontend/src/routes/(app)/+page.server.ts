@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
 		if(locals.user.type === "S")
 			throw redirect(302, '/user/home');
-		else if(locals.user.type === "A")
+		else if(locals.user.type === "M")
 			throw redirect(302, '/admin/overview');
 		else
 			throw redirect(302, '/mentor/startups/qualifieds')

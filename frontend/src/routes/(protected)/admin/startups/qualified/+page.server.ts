@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch, cookies }) => {
-    const response = await fetch('http://127.0.0.1:8000/startups?is_qualified=false', {
+    const response = await fetch('http://127.0.0.1:8000/startups?qualification_status=3', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json',
