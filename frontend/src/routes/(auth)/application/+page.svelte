@@ -49,6 +49,9 @@
 		'Investment Readiness Level',
 		'Technology and Commercialization Readiness Level Calculator'
 	];
+
+	export let data
+	console.log(data.technologyQuestions)
 </script>
 
 <svelte:head>
@@ -67,6 +70,6 @@
 <div class="flex-1 flex flex-col gap-5 items-center justify-between h-full">
 	<div class="flex-1 flex flex-col w-full p-10">
 		<h1 class="text-2xl font-semibold mb-5 px-6">{labels[currentActive]}</h1>
-		<ApplicationForm {form} {steps} {handleStep} {currentActive} />
+		<ApplicationForm {form} {steps} {handleStep} {currentActive} questions={data}/>
 	</div>
 </div>

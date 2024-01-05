@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let data
+	export let data
 </script>
 
 <div class="h-96">
@@ -21,7 +21,7 @@
 					<td>{applicant.group_name}</td>
 					<td>{applicant.member_1_name}</td>
 					<td>
-						<a href={`/admin/startups/qualifieds/${applicant.id}`}><button class="btn btn-ghost btn-xs">View</button></a>
+						<a href={`/admin/startups/rated/${applicant.id}`}><button class="btn btn-ghost btn-xs">View</button></a>
 					</td>
 				</tr>
 			{/each}

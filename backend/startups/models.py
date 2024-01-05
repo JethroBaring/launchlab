@@ -69,7 +69,7 @@ class URATQuestionAnswer(BaseModel):
         related_name="answers",
     )
     response = models.CharField(max_length=500)
-    score = models.SmallIntegerField()
+    score = models.SmallIntegerField(default=1)
 
 
 class ReadinessLevelCriterionAnswer(BaseModel):

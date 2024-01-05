@@ -11,6 +11,31 @@ class UratQuestionViewSet(
     queryset = readinesslevel_models.URATQuestion.objects
     serializer_class = readinesslevel_serializers.base.UratQuestionBaseSerializer
 
+    def get_permissions(self):
+        viewset_action = self.action
+
+        if viewset_action in ["list"]:
+            return []
+
+        return super().get_permissions()
+    
+    def get_queryset(self):
+        queryset = self.queryset
+        request = self.request
+
+        serializer = readinesslevel_serializers.query.UratQuestionQuerySerializer(
+            data=request.query_params
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        readiness_type = serializer.validated_data.get("readiness_type")
+        if readiness_type:
+            queryset = queryset.filter(readiness_type__rl_type=readiness_type)
+
+        return queryset.all()
+    
+    
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -23,7 +48,7 @@ class ReadinessLevelViewSet(
     serializer_class = readinesslevel_serializers.base.ReadinessLevelBaseSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = self.queryset
         request = self.request
 
         serializer = readinesslevel_serializers.query.ReadinessLevelQuerySerializer(

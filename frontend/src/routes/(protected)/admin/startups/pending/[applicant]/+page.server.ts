@@ -12,8 +12,17 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 
 	const data = await response.json();
 	if (response.ok) {
-		const anotherResponse = await fetch(
-			`http://127.0.0.1:8000/startups/${params.applicant}/retrieve-initial-readiness-level/`,
+		const urat_questions = await fetch('http://127.0.0.1:8000/readinesslevel/urat-questions/', {
+			method: 'get',
+			headers: {
+				Authorization: `Bearer ${cookies.get('Access')}`
+			}
+		});
+
+		const questions_data = await urat_questions.json();
+
+		const urat_answers = await fetch(
+			`http://127.0.0.1:8000/urat-question-answer/?startup_id=${data.id}`,
 			{
 				method: 'get',
 				headers: {
@@ -22,13 +31,13 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 			}
 		);
 
-		const anotherData = await anotherResponse.json();
+		const answers_data = await urat_answers.json();
 
-		if (anotherResponse.ok) {
+		if (urat_questions.ok && urat_answers.ok) {
 			return {
 				info: data,
-				response: anotherData,
-				params: params.applicant,
+				questions: questions_data.results,
+				answers: answers_data.results,
 				access: cookies.get('Access')
 			};
 		}
@@ -49,12 +58,11 @@ export const actions = {
 				}
 			}
 		);
-
 		if (response.ok) {
-			throw redirect(302, '/admin/startups/applicants');
+			throw redirect(302, `/admin/startups/qualified/${params.applicant}`);
 		} else {
 			console.log(response.statusText);
-			throw redirect(302, '/admin/startups/applicants');
+			throw redirect(302, `/admin/startups/pending/${params.applicant}`);
 		}
 	},
 	reject: async ({ cookies, params }) => {
@@ -76,6 +84,22 @@ export const actions = {
 		} else {
 			console.log(response.statusText);
 			throw redirect(302, '/admin/startups/applicants');
+		}
+	},
+	rate: async ({ cookies, params }) => {
+		const response = await fetch(
+			`http://127.0.0.1:8000/startups/${params.applicant}/rate-applicant/`,
+			{
+				method: 'post',
+				headers: {
+					'Content-type': 'application/json',
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
+
+		if (response.ok) {
+			throw redirect(302, `/admin/startups/rated/${params.applicant}`);
 		}
 	}
 };

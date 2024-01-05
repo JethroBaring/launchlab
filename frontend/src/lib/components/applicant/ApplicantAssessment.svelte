@@ -9,7 +9,8 @@
 	} from '../assessment';
 	import Icon from '../icons/icon.svelte';
 	let check = true;
-	export let data: any;
+	export let questions: any;
+	export let answers: any
 	export let access: any
 	const handleClick = () => {
 		check = !check;
@@ -28,11 +29,11 @@
 		</div>
 	</div>
 	<div class="collapse-content flex flex-col gap-3">
-		<TechnologyAssessment response={data} {access}/>
-		<MarketAssessment response={data} {access}/>
-		<RegulatoryAssessment response={data} {access}/>
-		<AcceptanceAssessment response={data} {access}/>
-		<OrganizationalAssessment response={data} {access}/>
-		<InvestmentAssessment response={data} {access}/>
+		<TechnologyAssessment {access} questions={questions.filter((q) => q.readiness_type === "Technology")} answers={answers.filter((a) => a.readiness_type === "Technology")}/>
+		<MarketAssessment {access} questions={questions.filter((q) => q.readiness_type === "Market")} answers={answers.filter((a) => a.readiness_type === "Market")}/>
+		<RegulatoryAssessment {access} questions={questions.filter((q) => q.readiness_type === "Regulatory")} answers={answers.filter((a) => a.readiness_type === "Regulatory")}/>
+		<AcceptanceAssessment {access} questions={questions.filter((q) => q.readiness_type === "Acceptance")} answers={answers.filter((a) => a.readiness_type === "Acceptance")}/>
+		<OrganizationalAssessment {access} questions={questions.filter((q) => q.readiness_type === "Organizational")} answers={answers.filter((a) => a.readiness_type === "Organizational")}/>
+		<InvestmentAssessment {access} questions={questions.filter((q) => q.readiness_type === "Investment")} answers={answers.filter((a) => a.readiness_type === "Investment")}/>
 	</div>
 </div>

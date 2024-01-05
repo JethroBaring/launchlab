@@ -17,13 +17,13 @@
 					on:click={() => handleClick('pending')}>Pending</a
 				>
 				<a
-					href="/admin/startups/qualified"
+					href="/admin/startups/rated"
 					class="tab tab-bordered"
 					class:tab-active={current === 'rated'}
 					on:click={() => handleClick('rated')}>Rated</a
 				>
 				<a
-					href="/admin/startups/pending"
+					href="/admin/startups/qualified"
 					class="tab tab-bordered tab-active"
 					class:tab-active={current === 'qualified'}
 					on:click={() => handleClick('qualified')}>Qualified</a

@@ -37,12 +37,12 @@ class LevelCriterion(BaseModel):
 
 
 class ScoringGuide(BaseModel):
-    level_criteria = models.ForeignKey(
-        LevelCriterion, on_delete=models.CASCADE, related_name="scoring_guides"
+    readiness_level = models.ForeignKey(
+        ReadinessLevel, on_delete=models.CASCADE, related_name="scoring_guides"
     )
     start_range = models.SmallIntegerField()
     end_range = models.SmallIntegerField()
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=700)
 
 
 class URATQuestion(BaseModel):

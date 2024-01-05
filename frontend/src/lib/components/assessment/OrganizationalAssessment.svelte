@@ -1,30 +1,38 @@
 <script lang="ts">
 	import Icon from '../icons/icon.svelte';
-	export let response: any;
+	export let questions: any;
+	export let answers: any;
 	export let access: string;
 	let check2 = true;
 	const handleClick2 = () => {
 		check2 = !check2;
 	};
 
-	const orl: number[] = response.orl.split(',').map(Number);
-
-	const handleClick = async (payload: string) => {
-		const x = await fetch(`http://127.0.0.1:8000/initial-readiness-levels/${response.id}/`, {
+	const updateScore = async (
+		id: number,
+		newScore: number,
+		startupId: number,
+		urat_question_id: number,
+		answers: string,
+		readiness_type: string
+	) => {
+		const d = await fetch(`http://127.0.0.1:8000/urat-question-answer/${id}/`, {
 			method: 'put',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-type': 'application/json',
 				Authorization: `Bearer ${access}`
 			},
 			body: JSON.stringify({
-				orl: payload
+				startup_id: startupId,
+				urat_question_id: urat_question_id,
+				response: answers,
+				readiness_type: readiness_type,
+				score: newScore
 			})
 		});
 
-		if (x.ok) {
-			console.log(x);
-		} else {
-			console.log(x);
+		if (d.ok) {
+			console.log('ok');
 		}
 	};
 </script>
@@ -42,209 +50,118 @@
 	</div>
 	<div class="collapse-content flex flex-col gap-3">
 		<div class="collapse-content flex flex-col gap-3">
-			<div class="collapse">
-				<input type="checkbox" checked={check2} />
-				<div class="collapse-title text-xl font-semibold">
-					<div class="flex gap-3 items-center">
-						<p class="text-base">
-							Describe your organizational structure and the roles of your team members.
-						</p>
-						<Icon
-							data1={check2 ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'}
-							data2={null}
-						/>
+			{#each questions as question, i}
+				<div class="collapse">
+					<input type="checkbox" checked={check2} />
+					<div class="collapse-title text-xl font-semibold">
+						<div class="flex gap-3 items-center">
+							<p class="text-base">
+								{question.question}
+							</p>
+							<Icon
+								data1={check2 ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'}
+								data2={null}
+							/>
+						</div>
+					</div>
+					<div class="collapse-content flex flex-col gap-3">
+						<p>{answers[i].response}</p>
+						<div class="flex gap-2">
+							<div class="flex flex-col items-center gap-1">
+								<input
+									type="radio"
+									name={`technology${answers[i].urat_question_id}`}
+									class="radio"
+									checked={answers[i].score === 1}
+									on:click={() =>
+										updateScore(
+											answers[i].id,
+											1,
+											answers[i].startup_id,
+											answers[i].urat_question_id,
+											answers[i].response,
+											answers[i].readiness_type
+										)}
+								/>
+								<p class="text-xs">1</p>
+							</div>
+							<div class="flex flex-col items-center gap-1">
+								<input
+									type="radio"
+									name={`technology${answers[i].urat_question_id}`}
+									class="radio"
+									checked={answers[i].score === 2}
+									on:click={() =>
+										updateScore(
+											answers[i].id,
+											2,
+											answers[i].startup_id,
+											answers[i].urat_question_id,
+											answers[i].response,
+											answers[i].readiness_type
+										)}
+								/>
+								<p class="text-xs">2</p>
+							</div>
+							<div class="flex flex-col items-center gap-1">
+								<input
+									type="radio"
+									name={`technology${answers[i].urat_question_id}`}
+									class="radio"
+									checked={answers[i].score === 3}
+									on:click={() =>
+										updateScore(
+											answers[i].id,
+											3,
+											answers[i].startup_id,
+											answers[i].urat_question_id,
+											answers[i].response,
+											answers[i].readiness_type
+										)}
+								/>
+								<p class="text-xs">3</p>
+							</div>
+							<div class="flex flex-col items-center gap-1">
+								<input
+									type="radio"
+									name={`technology${answers[i].urat_question_id}`}
+									class="radio"
+									checked={answers[i].score === 4}
+									on:click={() =>
+										updateScore(
+											answers[i].id,
+											4,
+											answers[i].startup_id,
+											answers[i].urat_question_id,
+											answers[i].response,
+											answers[i].readiness_type
+										)}
+								/>
+								<p class="text-xs">4</p>
+							</div>
+							<div class="flex flex-col items-center gap-1">
+								<input
+									type="radio"
+									name={`technology${answers[i].urat_question_id}`}
+									class="radio"
+									checked={answers[i].score === 5}
+									on:click={() =>
+										updateScore(
+											answers[i].id,
+											5,
+											answers[i].startup_id,
+											answers[i].urat_question_id,
+											answers[i].response,
+											answers[i].readiness_type
+										)}
+								/>
+								<p class="text-xs">5</p>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="collapse-content flex flex-col gap-3">
-					<p>{response.orl_response[0].trim()}</p>
-					<div class="rating">
-						<input
-							type="radio"
-							name="organizationalRating"
-							class="mask mask-star"
-							checked={orl[0] === 1}
-							on:click={() => {
-								orl[0] = 1;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating"
-							class="mask mask-star"
-							checked={orl[0] === 2}
-							on:click={() => {
-								orl[0] = 2;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating"
-							class="mask mask-star"
-							checked={orl[0] === 3}
-							on:click={() => {
-								orl[0] = 3;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating"
-							class="mask mask-star"
-							checked={orl[0] === 4}
-							on:click={() => {
-								orl[0] = 4;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating"
-							class="mask mask-star"
-							checked={orl[0] === 5}
-							on:click={() => {
-								orl[0] = 5;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-			<div class="collapse">
-				<input type="checkbox" checked={check2} />
-				<div class="collapse-title text-xl font-semibold">
-					<div class="flex gap-3 items-center">
-						<p class="text-base">How are internal processes managed within your startup?</p>
-						<Icon
-							data1={check2 ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'}
-							data2={null}
-						/>
-					</div>
-				</div>
-				<div class="collapse-content flex flex-col gap-3">
-					<p>{response.orl_response[1].trim()}</p>
-					<div class="rating">
-						<input
-							type="radio"
-							name="organizationalRating1"
-							class="mask mask-star"
-							checked={orl[1] === 1}
-							on:click={() => {
-								orl[1] = 1;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating1"
-							class="mask mask-star"
-							checked={orl[1] === 2}
-							on:click={() => {
-								orl[1] = 2;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating1"
-							class="mask mask-star"
-							checked={orl[1] === 3}
-							on:click={() => {
-								orl[1] = 3;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating1"
-							class="mask mask-star"
-							checked={orl[1] === 4}
-							on:click={() => {
-								orl[1] = 4;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating1"
-							class="mask mask-star"
-							checked={orl[1] === 5}
-							on:click={() => {
-								orl[1] = 5;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-					</div>
-				</div>
-			</div>
-			<div class="collapse">
-				<input type="checkbox" checked={check2} />
-				<div class="collapse-title text-xl font-semibold">
-					<div class="flex gap-3 items-center">
-						<p class="text-base">
-							What strategies do you have in place for team development and operational efficiency?
-						</p>
-						<Icon
-							data1={check2 ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'}
-							data2={null}
-						/>
-					</div>
-				</div>
-				<div class="collapse-content flex flex-col gap-3"><p>{response.orl_response[2].trim()}</p>
-					<div class="rating">
-						<input
-							type="radio"
-							name="organizationalRating2"
-							class="mask mask-star"
-							checked={orl[2] === 1}
-							on:click={() => {
-								orl[2] = 1;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating2"
-							class="mask mask-star"
-							checked={orl[2] === 2}
-							on:click={() => {
-								orl[2] = 2;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating2"
-							class="mask mask-star"
-							checked={orl[2] === 3}
-							on:click={() => {
-								orl[2] = 3;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating2"
-							class="mask mask-star"
-							checked={orl[2] === 4}
-							on:click={() => {
-								orl[2] = 4;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-						<input
-							type="radio"
-							name="organizationalRating2"
-							class="mask mask-star"
-							checked={orl[2] === 5}
-							on:click={() => {
-								orl[2] = 5;
-								handleClick(`${orl[0]},${orl[1]},${orl[2]}`);
-							}}
-						/>
-					</div></div>
-			</div>
+			{/each}
+
 		</div>
 	</div>
 </div>

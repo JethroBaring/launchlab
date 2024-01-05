@@ -28,6 +28,8 @@
 	const toggleEligibility = () => {
 		formData.eligibility = !formData.eligibility;
 	};
+
+	export let questions: any
 </script>
 
 <form
@@ -40,12 +42,12 @@
 	<ProjectDetails {currentActive} />
 	<GroupInformation {currentActive} />
 	<EligibilityAgreement {toggleEligibility} eligibility={formData.eligibility} {currentActive} />
-	<Technology {currentActive} />
-	<Market {currentActive} />
-	<Regulatory {currentActive} />
-	<Acceptance {currentActive} />
-	<Organizational {currentActive} />
-	<Investment {currentActive} />
+	<Technology {currentActive} question={questions.technologyQuestions}/>
+	<Market {currentActive} question={questions.marketQuestions}/>
+	<Regulatory {currentActive} question={questions.regulatoryQuestions}/>
+	<Acceptance {currentActive} question={questions.acceptanceQuestions}/>
+	<Organizational {currentActive} question={questions.organizationalQuestions}/>
+	<Investment {currentActive} question={questions.investmentQuestions}/>
 	<TechnologyCalculator {currentActive}/>
 	<div class="flex gap-3 justify-end">
 		{#if currentActive != 0}

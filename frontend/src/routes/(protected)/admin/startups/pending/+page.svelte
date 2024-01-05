@@ -25,7 +25,7 @@
 					<td>{applicant.group_name}</td>
 					<td>{applicant.member_1_name}</td>
 					<td>
-						<a href={`/admin/startups/applicants/${applicant.id}`}><button class="btn btn-ghost btn-xs">Review</button></a>
+						<a href={`/admin/startups/pending/${applicant.id}`}><button class="btn btn-ghost btn-xs">Review</button></a>
 					</td>
 				</tr>
 			{/each}

@@ -96,8 +96,8 @@ class StartupViewSet(
             member_1_email, first_name=startup.member_1_name
         )
         startup.user = user
-        startup.is_qualified = True
-        startup.save(update_fields=["is_qualified", "user"])
+        startup.qualification_status = 3
+        startup.save(update_fields=["qualification_status", "user"])
 
         return Response("sent email successfully", status=status.HTTP_200_OK)
 
@@ -124,6 +124,21 @@ class StartupViewSet(
             200: startups_serializers.base.StartupBaseSerializer(many=True),
         },
     )
+    
+    @transaction.atomic
+    @action(url_path="rate-applicant", detail=True, methods=["POST"])
+    def rate_applicant(self, request, pk):
+        startup = self.get_object()
+
+        # Assuming a POST request is used to rate the applicant
+        # Extract any necessary information from the request, if needed
+
+        # Update the qualification_status to 2 (assuming 2 represents a specific status)
+        startup.qualification_status = 2
+        startup.save(update_fields=["qualification_status"])
+
+        return Response("startup rated successfully", status=status.HTTP_200_OK)
+    
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -217,7 +232,7 @@ class StartupViewSet(
 
 
 class UratQuestionAnswerViewSet(
-    mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet
+    mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet, mixins.UpdateModelMixin
 ):
     queryset = startups_models.URATQuestionAnswer.objects
     serializer_class = startups_serializers.base.UratQuestionAnswerBaseSerializer
@@ -236,7 +251,13 @@ class UratQuestionAnswerViewSet(
             queryset = queryset.filter(startup_id=startup_id)
 
         return queryset.all()
-
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+    
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
@@ -244,23 +265,25 @@ class UratQuestionAnswerViewSet(
         return super().list(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
-        urat_question_answer = self.get_object()
+        return super().partial_update(request, *args, **kwargs)
+    # def partial_update(self, request, *args, **kwargs):
+    #     urat_question_answer = self.get_object()
 
-        request_serializer = (
-            startups_serializers.request.UpdateUratQuestionAnswerRequestSerializer(
-                data=request.data
-            )
-        )
-        request_serializer.is_valid(raise_exception=True)
+    #     request_serializer = (
+    #         startups_serializers.request.UpdateUratQuestionAnswerRequestSerializer(
+    #             data=request.data
+    #         )
+    #     )
+    #     request_serializer.is_valid(raise_exception=True)
 
-        score = request_serializer.validated_data.get("score")
+    #     score = request_serializer.validated_data.get("score")
 
-        urat_question_answer.score = score
-        urat_question_answer.save(update_fields=["score"])
+    #     urat_question_answer.score = score
+    #     urat_question_answer.save(update_fields=["score"])
 
-        return Response(
-            self.serializer_class(urat_question_answer).data, status=status.HTTP_200_OK
-        )
+    #     return Response(
+    #         self.serializer_class(urat_question_answer).data, status=status.HTTP_200_OK
+    #     )
 
 
 class ReadinessLevelCriterionAnswerViewSet(

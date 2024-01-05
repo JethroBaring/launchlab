@@ -1,17 +1,34 @@
-import { fail, redirect } from '@sveltejs/kit';
-import generateMeta from '$lib/utils/openaiController.js';
+import { error, fail, redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ fetch }) => {
+	const uratQuestions = await fetch('http://127.0.0.1:8000/readinesslevel/urat-questions/')
+
+	const data = await uratQuestions.json()
+	if(uratQuestions.ok) {
+		return {
+			technologyQuestions: data.results.filter((d) => d.readiness_type === "Technology"),
+			marketQuestions: data.results.filter((d) => d.readiness_type === "Market"),
+			acceptanceQuestions: data.results.filter((d) => d.readiness_type === "Acceptance"),
+			organizationalQuestions: data.results.filter((d) => d.readiness_type === "Organizational"),
+			regulatoryQuestions: data.results.filter((d) => d.readiness_type === "Regulatory"),
+			investmentQuestions: data.results.filter((d) => d.readiness_type === "Investment"),
+
+		}
+	}
+};
 
 export const actions = {
 	application: async ({ request, fetch }) => {
 		const formData = await request.formData();
 
-		// if (
-		// 	!Object.values(formData)
-		// 		.filter((key) => key !== 'links' && key !== 'university_name')
-		// 		.every((value) => value !== undefined && value !== null && value !== '')
-		// ) {
-		// 	return fail(400, { credentials: true });
-		// }
+		if (
+			!Object.values(formData)
+				.filter((key) => key !== 'links' && key !== 'university_name')
+				.every((value) => value !== undefined && value !== null && value !== '')
+		) {
+			return fail(400, { credentials: true });
+		}
 		const newFormData = new FormData();
 		const members = ['member_2_email', 'member_3_email', 'member_4_email', 'member_5_email'];
 
@@ -39,86 +56,32 @@ export const actions = {
 
 		if (response.ok) {
 			const data = await response.json();
+			const startupId = data.id;
+			
+			const types = ["technology","market","acceptance", "organizational", "regulatory", "investment"]
 
-			const initialAssessment = await fetch(
-				`http://127.0.0.1:8000/startups/${data.id}/create-initial-readiness-level/`,
-				{
-					method: 'post',
-					headers: {
-						'Content-type': 'application/json'
-					},
-					body: JSON.stringify({
-						irl_response: [
-							formData.get('investment1'),
-							formData.get('investment2'),
-							formData.get('investment3')
-						],
-						trl_response: [
-							formData.get('technology1'),
-							formData.get('technology2'),
-							formData.get('technology3')
-						],
-						orl_response: [
-							formData.get('organizational1'),
-							formData.get('organizational2'),
-							formData.get('organizational3')
-						],
-						mrl_response: [
-							formData.get('market1'),
-							formData.get('market2'),
-							formData.get('market3')
-						],
-						rrl_response: [
-							formData.get('regulatory1'),
-							formData.get('regulatory2'),
-							formData.get('regulatory3')
-						],
-						arl_response: [
-							formData.get('acceptance1'),
-							formData.get('acceptance2'),
-							formData.get('acceptance3')
-						],
-						irl: '1,1,1',
-						trl: '1,1,1',
-						orl: '1,1,1',
-						mrl: '1,1,1',
-						rrl: '1,1,1',
-						arl: '1,1,1'
+			await Promise.all(types.map(async (type) => {
+				for(let i = 0; i < 3; i++) {
+					await fetch('http://127.0.0.1:8000/urat-question-answer/', {
+						method: 'post',
+						headers: {
+							'Content-type': 'application/json'
+						},
+						body: JSON.stringify({
+							startup_id: startupId,
+							urat_question_id: formData.get(`${type}${i}id`),
+							response: formData.get(`${type}${i}`)
+						})
 					})
 				}
-			);
-
-			if (initialAssessment.ok) {
-				const x = await generateMeta(
-					formData.get('technology1') as string,
-					formData.get('technology2') as string,
-					formData.get('technology3') as string,
-					formData.get('market1') as string,
-					formData.get('market2') as string,
-					formData.get('market3') as string,
-					formData.get('regulatory1') as string,
-					formData.get('regulatory2') as string,
-					formData.get('regulatory3') as string,
-					formData.get('acceptance1') as string,
-					formData.get('acceptance2') as string,
-					formData.get('acceptance3') as string,
-					formData.get('organizational1') as string,
-					formData.get('organizational2') as string,
-					formData.get('organizational3') as string,
-					formData.get('investment1') as string,
-					formData.get('investment2') as string,
-					formData.get('investment3') as string
-				);
-
-				if(x) {
-					console.log(x)
-					throw redirect(302, '/emailsent');
-				}
-			} else {
-				console.log(initialAssessment);
-			}
+			})).then(values => {
+				console.log(values)
+				throw redirect(302, '/emailsent');
+			}).catch(error => {
+				console.log(error)
+				return fail(400, { credentials: true });
+			})
 		}
 
-		return fail(400, { credentials: true });
 	}
 };

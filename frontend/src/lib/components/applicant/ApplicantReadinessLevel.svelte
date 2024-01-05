@@ -6,38 +6,24 @@
 	let m = 9;
 	export let readiness: any;
 	
-	const trl = readiness.trl.split(",").map(Number);
-	const orl = readiness.orl.split(",").map(Number);
-	const mrl = readiness.mrl.split(",").map(Number);
-	const rrl = readiness.rrl.split(",").map(Number);
-	const arl = readiness.arl.split(",").map(Number);
-	const irl = readiness.irl.split(",").map(Number);
-	let trlSum:number = 0,orlSum:number = 0,mrlSum:number = 0,rrlSum: number = 0,arlSum: number = 0,irlSum: number = 0;
-
-	trl.forEach((element:number) => {
-		trlSum+=element
-	});
-
-	orl.forEach((element:number) => {
-		orlSum+=element
-	});
-
-	mrl.forEach((element:number) => {
-		mrlSum+=element
-	});
-
-	rrl.forEach((element:number) => {
-		rrlSum+=element
-	});
-
-	arl.forEach((element:number) => {
-		arlSum+=element
-	});
-
-	irl.forEach((element:number) => {
-		irlSum+=element
-	});
-
+	const trl = readiness.filter((d) => d.readiness_type === "Technology").reduce((accumulator: any, currentValue: any) =>  {
+		return	accumulator + currentValue.score
+	}, 0)
+	const orl = readiness.filter((d) => d.readiness_type === "Organizational").reduce((accumulator: any, currentValue: any) =>  {
+		return	accumulator + currentValue.score
+	}, 0)
+	const mrl = readiness.filter((d) => d.readiness_type === "Market").reduce((accumulator: any, currentValue: any) =>  {
+		return	accumulator + currentValue.score
+	}, 0)
+	const rrl = readiness.filter((d) => d.readiness_type === "Regulatory").reduce((accumulator: any, currentValue: any) =>  {
+		return	accumulator + currentValue.score
+	}, 0)
+	const arl = readiness.filter((d) => d.readiness_type === "Acceptance").reduce((accumulator: any, currentValue: any) =>  {
+		return	accumulator + currentValue.score
+	}, 0)
+	const irl = readiness.filter((d) => d.readiness_type === "Investment").reduce((accumulator: any, currentValue: any) =>  {
+		return	accumulator + currentValue.score
+	}, 0)
 
 	const redrawChart = () => {
 		let x = 65;
@@ -47,7 +33,7 @@
 			datasets: [
 				{
 					label: 'Readiness Levels',
-					data: [trlSum, orlSum, mrlSum, rrlSum, arlSum, irlSum],
+					data: [trl, orl, mrl, rrl, arl, irl],
 					fill: true,
 					backgroundColor: 'rgba(54, 162, 235, 0.2)',
 					borderColor: 'rgb(54, 162, 235)',
@@ -97,7 +83,7 @@
 	<input type="checkbox" checked={check} on:click={handleClick} />
 	<div class="collapse-title text-xl font-semibold">
 		<div class="flex gap-3 items-center">
-			<p>Readiness Levels</p>
+			<p>URAT Questionnaire Readiness Levels</p>
 			<Icon
 				data1={check ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'}
 				data2={null}

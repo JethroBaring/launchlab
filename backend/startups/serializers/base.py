@@ -52,7 +52,8 @@ class UratQuestionAnswerBaseSerializer(serializers.ModelSerializer):
     urat_question_id = serializers.PrimaryKeyRelatedField(
         source="urat_question", queryset=readinesslevel_models.URATQuestion.objects
     )
-    score = serializers.IntegerField(read_only=True)
+    score = serializers.IntegerField()
+    readiness_type = serializers.CharField(source="urat_question.readiness_type.get_rl_type_display", read_only=True)
 
     class Meta:
         model = startups_models.URATQuestionAnswer
@@ -62,6 +63,7 @@ class UratQuestionAnswerBaseSerializer(serializers.ModelSerializer):
             "urat_question_id",
             "response",
             "score",
+            "readiness_type"
         ]
 
 

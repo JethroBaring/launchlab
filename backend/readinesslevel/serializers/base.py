@@ -7,12 +7,10 @@ class UratQuestionBaseSerializer(serializers.ModelSerializer):
     readiness_type_id = serializers.PrimaryKeyRelatedField(
         source="readiness_type", queryset=readinesslevel_models.ReadinessType.objects
     )
-
-    readiness_type_verbose = serializers.CharField(source="get_readiness_type_display")
-
+    readiness_type = serializers.CharField(source="readiness_type.get_rl_type_display", read_only=True)
     class Meta:
         model = readinesslevel_models.URATQuestion
-        fields = ["id", "question", "readiness_type_id", "readiness_type_verbose"]
+        fields = ["id", "question", "readiness_type_id", "readiness_type"]
 
 
 class LevelCriterionBaseSerializer(serializers.ModelSerializer):
@@ -35,15 +33,15 @@ class LevelCriterionBaseSerializer(serializers.ModelSerializer):
 
 
 class ScoringGuideBaseSerializer(serializers.ModelSerializer):
-    level_criteria_id = serializers.PrimaryKeyRelatedField(
-        source="level_criteria", read_only=True
+    readiness_level_id = serializers.PrimaryKeyRelatedField(
+        source="readiness_level", read_only=True
     )
 
     class Meta:
         model = readinesslevel_models.ScoringGuide
         fields = [
             "id",
-            "level_criteria_id",
+            "readiness_level_id",
             "start_range",
             "end_range",
             "description",
@@ -54,10 +52,8 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
     readiness_type_id = serializers.PrimaryKeyRelatedField(
         source="readiness_type", queryset=readinesslevel_models.ReadinessType.objects
     )
-    criteria = LevelCriterionBaseSerializer(many=True)
-    scoring_guide = ScoringGuideBaseSerializer(many=True)
-
-    readiness_type_verbose = serializers.CharField(source="get_readiness_type_display")
+    level_criteria = LevelCriterionBaseSerializer(many=True)
+    scoring_guides = ScoringGuideBaseSerializer(many=True)
 
     class Meta:
         model = readinesslevel_models.ReadinessLevel
@@ -66,7 +62,6 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
             "level",
             "name",
             "readiness_type_id",
-            "readiness_type_verbose",
-            "criteria",
-            "scoring_guide",
+            "level_criteria",
+            "scoring_guides",
         ]
