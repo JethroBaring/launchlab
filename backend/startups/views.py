@@ -166,6 +166,25 @@ class StartupViewSet(
 
         return Response(self.serializer_class(startup).data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        request_body=startups_serializers.request.AssignMentorsRequestSerializer,
+        responses={204: ""},
+    )
+    @action(url_path="appoint-mentors", detail=True, methods=["POST"])
+    def appoint_mentors(self, request, pk):
+        startup = self.get_object()
+
+        request_seralizer = startups_serializers.request.AssignMentorsRequestSerializer(
+            data=request.data
+        )
+        request_seralizer.is_valid(raise_exception=True)
+
+        mentor_ids = request_seralizer.validated_data.get("mentor_ids")
+
+        startup.mentors.set(mentor_ids)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class UratQuestionAnswerViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet, mixins.UpdateModelMixin

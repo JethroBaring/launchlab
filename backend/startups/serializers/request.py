@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from startups import models as startups_models
 from startups.serializers import base as startups_base_serializers
+from users import models as users_models
 
 
 class StartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
@@ -57,4 +58,13 @@ class BulkCreateUratQuestionAnswerRequestSerializer(serializers.Serializer):
 class BulkCreateStartupReadinessLevelRequestSerializer(serializers.Serializer):
     startup_readiness_levels = (
         startups_base_serializers.StartupReadinessLevelBaseSerializer(many=True)
+    )
+
+
+class AssignMentorsRequestSerializer(serializers.Serializer):
+    mentor_ids = serializers.ListField(
+        child=(
+            serializers.PrimaryKeyRelatedField(queryset=users_models.MentorUser.objects)
+        ),
+        write_only=True,
     )

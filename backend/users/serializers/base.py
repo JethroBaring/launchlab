@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from users import models
+from users import models as users_models
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserBaseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.BaseUser
+        model = users_models.BaseUser
         fields = [
             "user_type",
             "email",
