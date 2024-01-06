@@ -235,6 +235,7 @@
 
 		console.log(technologyLevel)
 		console.log(commercializationLevel)
+		console.log(tech, dev, def, comp, team, market, chain)
 	};
 
 	updateLevel();

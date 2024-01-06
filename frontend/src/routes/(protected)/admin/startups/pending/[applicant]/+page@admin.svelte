@@ -2,6 +2,7 @@
 	import ApplicantAssessment from '$lib/components/applicant/ApplicantAssessment.svelte';
 	import ApplicantGroupInformation from '$lib/components/applicant/ApplicantGroupInformation.svelte';
 	import ApplicantProjectDetails from '$lib/components/applicant/ApplicantProjectDetails.svelte';
+	import ApplicantTechnologyCalculator from '$lib/components/applicant/ApplicantTechnologyCalculator.svelte';
 	import Icon from '$lib/components/icons/icon.svelte';
 
 	export let data;
@@ -22,6 +23,9 @@
 					<div class="divider" />
 					<ApplicantGroupInformation groupName={data.info.group_name} leaderName={data.info.member_1_name} leaderEmail={data.info.member_1_email} leaderNumber={data.info.member_1_number} members={data.info.members} university={data.info.university_name}/>
 					<div class="divider" />
+					<ApplicantTechnologyCalculator />
+					<div class="divider"/>
+
 					<ApplicantAssessment questions={data.questions} answers={data.answers} access={data.access}/> 
 					<div class="flex gap-5 w-full justify-end">
 						<!-- <form action={`/admin/startups/applicants/${data.params}?/reject`} method="post">

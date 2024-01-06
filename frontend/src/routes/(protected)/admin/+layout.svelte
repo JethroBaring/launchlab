@@ -11,7 +11,7 @@
 		<TopBar />
 		<LeftSideBar
 			sidebarLinks={adminSidebarLinks}
-			name={`${data.user.email}`}
+			name={`${data.user.firstName} ${data.user.lastName}`}
 			type={data.user.type}
 		/>
 		<div class="flex flex-1 h-full p-10 bg-slate-100">

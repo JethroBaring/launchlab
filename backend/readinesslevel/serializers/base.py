@@ -54,7 +54,7 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
     )
     level_criteria = LevelCriterionBaseSerializer(many=True)
     scoring_guides = ScoringGuideBaseSerializer(many=True)
-
+    readiness_type = serializers.CharField(source="readiness_type.get_rl_type_display", read_only=True)
     class Meta:
         model = readinesslevel_models.ReadinessLevel
         fields = [
@@ -62,6 +62,7 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
             "level",
             "name",
             "readiness_type_id",
+            "readiness_type",
             "level_criteria",
             "scoring_guides",
         ]

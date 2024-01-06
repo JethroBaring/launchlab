@@ -129,11 +129,6 @@ class StartupViewSet(
     @action(url_path="rate-applicant", detail=True, methods=["POST"])
     def rate_applicant(self, request, pk):
         startup = self.get_object()
-
-        # Assuming a POST request is used to rate the applicant
-        # Extract any necessary information from the request, if needed
-
-        # Update the qualification_status to 2 (assuming 2 represents a specific status)
         startup.qualification_status = 2
         startup.save(update_fields=["qualification_status"])
 

@@ -26,23 +26,14 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 			}
 		});
 
-		const haveScores = await fetch(`http://127.0.0.1:8000/readiness-level-criterion-answer/?startup_id=${params.applicant}`, {
-			method: 'get',
-			headers: {
-				Authorization: `Bearer ${cookies.get('Access')}`
-			}
-		})
-
 		const rubrics_data = await rubrics.json();
 		const rubrics2_data = await rubrics2.json();
-		const scores_data = await haveScores.json()
 
-		if (rubrics.ok && rubrics2.ok && haveScores.ok) {
+		if (rubrics.ok) {
 			return {
 				info: data,
 				questions: rubrics_data.results.concat(rubrics2_data.results),
-				access: cookies.get('Access'),
-				scores: scores_data.results
+				access: cookies.get('Access')
 			};
 		}
 	}
@@ -90,7 +81,7 @@ export const actions = {
 								Authorization: `Bearer ${cookies.get('Access')}`
 							},
 							body: JSON.stringify({
-								startup_id: params.applicant,
+								startup_id: 123123,
 								criterion_id: formData.get(`${type}Criteria${level}${criteria}`),
 								score: formData.get(`${type}${level}${criteria}`),
 								remark: formData.get(`${type}Remark${level}${criteria}`)

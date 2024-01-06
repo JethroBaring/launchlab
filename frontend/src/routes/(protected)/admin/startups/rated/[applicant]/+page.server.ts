@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 
 export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
@@ -34,4 +34,47 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 	}
 
 	throw error(404);
+};
+
+
+export const actions = {
+	approve: async ({ cookies, params }) => {
+		const response = await fetch(
+			`http://127.0.0.1:8000/startups/${params.applicant}/approve-applicant/`,
+			{
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
+		if (response.ok) {
+			throw redirect(302, `/admin/startups/qualified/${params.applicant}`);
+		} else {
+			console.log(response.statusText);
+			throw redirect(302, `/admin/startups/pending/${params.applicant}`);
+		}
+	},
+	reject: async ({ cookies, params }) => {
+		const response = await fetch(
+			`http://127.0.0.1:8000/startups/${params.applicant}/reject-applicant/`,
+			{
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
+
+		if (response.ok) {
+			return {
+				message: 'email has been sent to the applicant'
+			};
+		} else {
+			console.log(response.statusText);
+			throw redirect(302, '/admin/startups/applicants');
+		}
+	},
 };

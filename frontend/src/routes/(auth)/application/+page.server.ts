@@ -2,19 +2,18 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch }) => {
-	const uratQuestions = await fetch('http://127.0.0.1:8000/readinesslevel/urat-questions/')
+	const uratQuestions = await fetch('http://127.0.0.1:8000/readinesslevel/urat-questions/');
 
-	const data = await uratQuestions.json()
-	if(uratQuestions.ok) {
+	const data = await uratQuestions.json();
+	if (uratQuestions.ok) {
 		return {
-			technologyQuestions: data.results.filter((d) => d.readiness_type === "Technology"),
-			marketQuestions: data.results.filter((d) => d.readiness_type === "Market"),
-			acceptanceQuestions: data.results.filter((d) => d.readiness_type === "Acceptance"),
-			organizationalQuestions: data.results.filter((d) => d.readiness_type === "Organizational"),
-			regulatoryQuestions: data.results.filter((d) => d.readiness_type === "Regulatory"),
-			investmentQuestions: data.results.filter((d) => d.readiness_type === "Investment"),
-
-		}
+			technologyQuestions: data.results.filter((d) => d.readiness_type === 'Technology'),
+			marketQuestions: data.results.filter((d) => d.readiness_type === 'Market'),
+			acceptanceQuestions: data.results.filter((d) => d.readiness_type === 'Acceptance'),
+			organizationalQuestions: data.results.filter((d) => d.readiness_type === 'Organizational'),
+			regulatoryQuestions: data.results.filter((d) => d.readiness_type === 'Regulatory'),
+			investmentQuestions: data.results.filter((d) => d.readiness_type === 'Investment')
+		};
 	}
 };
 
@@ -57,31 +56,41 @@ export const actions = {
 		if (response.ok) {
 			const data = await response.json();
 			const startupId = data.id;
-			
-			const types = ["technology","market","acceptance", "organizational", "regulatory", "investment"]
 
-			await Promise.all(types.map(async (type) => {
-				for(let i = 0; i < 3; i++) {
-					await fetch('http://127.0.0.1:8000/urat-question-answer/', {
-						method: 'post',
-						headers: {
-							'Content-type': 'application/json'
-						},
-						body: JSON.stringify({
-							startup_id: startupId,
-							urat_question_id: formData.get(`${type}${i}id`),
-							response: formData.get(`${type}${i}`)
-						})
-					})
-				}
-			})).then(values => {
-				console.log(values)
-				throw redirect(302, '/emailsent');
-			}).catch(error => {
-				console.log(error)
-				return fail(400, { credentials: true });
-			})
+			const types = [
+				'technology',
+				'market',
+				'acceptance',
+				'organizational',
+				'regulatory',
+				'investment'
+			];
+
+			await Promise.all(
+				types.map(async (type) => {
+					for (let i = 0; i < 3; i++) {
+						await fetch('http://127.0.0.1:8000/urat-question-answer/', {
+							method: 'post',
+							headers: {
+								'Content-type': 'application/json'
+							},
+							body: JSON.stringify({
+								startup_id: startupId,
+								urat_question_id: formData.get(`${type}${i}id`),
+								response: formData.get(`${type}${i}`)
+							})
+						});
+					}
+				})
+			)
+				.then((values) => {
+					console.log(values);
+					throw redirect(302, '/emailsent');
+				})
+				.catch((error) => {
+					console.log(error);
+					return fail(400, { credentials: true });
+				});
 		}
-
 	}
 };

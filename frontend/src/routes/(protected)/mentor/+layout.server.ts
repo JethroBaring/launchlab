@@ -8,8 +8,8 @@ export const load: LayoutServerLoad =async ( {locals}) => {
 
     if(locals.user.type === 'M') {
         throw redirect(302, '/admin/startups/pending')
-    } else if(locals.user.type === "ME") {
-        throw redirect(302, '/mentor/startups/qualified')
+    } else if(locals.user.type === "S") {
+        throw redirect(302, '/user/home')
     }
 
     return {

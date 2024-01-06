@@ -3,9 +3,8 @@
 	import ApplicantProjectDetails from '$lib/components/applicant/ApplicantProjectDetails.svelte';
 	import ApplicantGroupInformation from '$lib/components/applicant/ApplicantGroupInformation.svelte';
 	import ApplicantReadinessLevel from '$lib/components/applicant/ApplicantReadinessLevel.svelte';
-	import ApplicantTechnologyCalculator from '$lib/components/applicant/ApplicantTechnologyCalculator.svelte';
+	import { QualifiedReadinessLevel } from '$lib/components/rubrics';
 	export let data;
-	console.log(data.answers)
 </script>
 
 
@@ -13,7 +12,7 @@
 	<div class="flex flex-col flex-1 gap-10">
 		<div class="flex flex-col gap-5 overflow-scroll h-full">
 			<div class="flex gap-5 items-center">
-				<a href="/admin/startups/rated">
+				<a href="/mentor/startups/qualified">
 					<Icon data1={'M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75'} data2={null} />
 				</a>
 				<h2 class="text-lg text-left">Back</h2>
@@ -24,17 +23,8 @@
 					<div class="divider" />
 					<ApplicantGroupInformation groupName={data.info.group_name} leaderName={data.info.member_1_name} leaderEmail={data.info.member_1_email} leaderNumber={data.info.member_1_number} members={data.info.members} university={data.info.university_name}/>
 					<div class="divider" />
-					<ApplicantTechnologyCalculator />
-					<div class="divider" />
-					<ApplicantReadinessLevel readiness={data.answers}/>
-						<div class="flex gap-5 w-full justify-end">
-							<form action={`/admin/startups/applicants/${data.params}?/reject`} method="post">
-								<button class="btn bg-red-500 hover:bg-red-600 btn-custom text-white normal-case">Reject</button>
-							</form>
-							<form action={`/admin/startups/rated/${data.info.id}?/approve`} method="post">
-								<button class="btn bg-green-500 hover:bg-green-600 btn-custom text-white normal-case">Approve</button>
-							</form>
-						</div>
+					<!-- <ApplicantReadinessLevel readiness={data.readiness}/> -->
+					<QualifiedReadinessLevel questions={data.questions} id={data.info.id} user={"mentor"}/>
 				</div>
 			</div>
 		</div>

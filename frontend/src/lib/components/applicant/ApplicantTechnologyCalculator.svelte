@@ -1,29 +1,21 @@
 <script lang="ts">
-	import Chart from 'chart.js/auto';
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import Chart from 'chart.js/auto';
 	import Icon from '../icons/icon.svelte';
-	let m = 9;
-	export let readiness: any;
-	
-	const trl = readiness.filter((d) => d.readiness_type === "Technology").reduce((accumulator: any, currentValue: any) =>  {
-		return	accumulator + currentValue.score
-	}, 0)
-	const orl = readiness.filter((d) => d.readiness_type === "Organizational").reduce((accumulator: any, currentValue: any) =>  {
-		return	accumulator + currentValue.score
-	}, 0)
-	const mrl = readiness.filter((d) => d.readiness_type === "Market").reduce((accumulator: any, currentValue: any) =>  {
-		return	accumulator + currentValue.score
-	}, 0)
-	const rrl = readiness.filter((d) => d.readiness_type === "Regulatory").reduce((accumulator: any, currentValue: any) =>  {
-		return	accumulator + currentValue.score
-	}, 0)
-	const arl = readiness.filter((d) => d.readiness_type === "Acceptance").reduce((accumulator: any, currentValue: any) =>  {
-		return	accumulator + currentValue.score
-	}, 0)
-	const irl = readiness.filter((d) => d.readiness_type === "Investment").reduce((accumulator: any, currentValue: any) =>  {
-		return	accumulator + currentValue.score
-	}, 0)
+	import { onMount } from 'svelte';
+	let check = false;
+	let show = true;
+
+	const handleClick = () => {
+		check = !check;
+	};
+
+    const trl = 1
+	const orl = 2
+	const mrl = 3
+	const rrl = 4
+	const arl = 5
+	const irl = 6
 
 	const redrawChart = () => {
 		let x = 65;
@@ -46,7 +38,7 @@
 		};
 
 		if (browser) {
-			ctx = document.getElementById('chart') as HTMLCanvasElement;
+			ctx = document.getElementById('calculator') as HTMLCanvasElement;
 			const chart = new Chart(ctx, {
 				type: 'radar',
 				data: d,
@@ -71,19 +63,12 @@
 	onMount(() => {
 		redrawChart();
 	});
-
-    let check = false;
-
-	const handleClick = () => {
-		check = !check;
-	};
 </script>
-
 <div class="collapse">
 	<input type="checkbox" checked={check} on:click={handleClick} />
 	<div class="collapse-title text-xl font-semibold">
 		<div class="flex gap-3 items-center">
-			<p>URAT Questionnaire Readiness Levels</p>
+			<p>Technology and Commercialization Calculator</p>
 			<Icon
 				data1={check ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'}
 				data2={null}
@@ -91,6 +76,6 @@
 		</div>
 	</div>
 	<div class="collapse-content flex flex-col gap-3">
-		<canvas id="chart"/>
-	</div>
+        <canvas id="calculator"/>
+    </div>
 </div>
