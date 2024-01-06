@@ -53,7 +53,9 @@ class UratQuestionAnswerBaseSerializer(serializers.ModelSerializer):
         source="urat_question", queryset=readinesslevel_models.URATQuestion.objects
     )
     score = serializers.IntegerField()
-    readiness_type = serializers.CharField(source="urat_question.readiness_type.get_rl_type_display", read_only=True)
+    readiness_type = serializers.CharField(
+        source="urat_question.readiness_type.get_rl_type_display", read_only=True
+    )
 
     class Meta:
         model = startups_models.URATQuestionAnswer
@@ -63,7 +65,7 @@ class UratQuestionAnswerBaseSerializer(serializers.ModelSerializer):
             "urat_question_id",
             "response",
             "score",
-            "readiness_type"
+            "readiness_type",
         ]
 
 
@@ -87,45 +89,18 @@ class ReadinessLevelCriterionAnswerBaseSerializer(serializers.ModelSerializer):
         ]
 
 
-# class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
-#     startup_id = serializers.PrimaryKeyRelatedField(
-#         source="startup", queryset=startups_models.Startup.objects
-#     )
-#     irl = serializers.IntegerField(read_only=True)
+class StartupReadinessLevelBaseSerializer(serializers.ModelSerializer):
+    startup_id = serializers.PrimaryKeyRelatedField(
+        source="startup", queryset=startups_models.Startup.objects
+    )
+    readiness_level_id = serializers.PrimaryKeyRelatedField(
+        source="criterion", queryset=readinesslevel_models.ReadinessLevel.objects
+    )
 
-#     class Meta:
-#         model = startups_models.ReadinessLevel
-#         fields = [
-#             "id",
-#             "startup_id",
-#             "trl",
-#             "orl",
-#             "mrl",
-#             "rrl",
-#             "arl",
-#             "irl",
-#             "datetime_created",
-#         ]
-
-
-# class InitialReadinessLevelBaseSerializer(serializers.ModelSerializer):
-#     startup_id = serializers.PrimaryKeyRelatedField(source="startup", read_only=True)
-
-#     class Meta:
-#         model = startups_models.InitialReadinessLevel
-#         fields = [
-#             "id",
-#             "startup_id",
-#             "trl_response",
-#             "orl_response",
-#             "mrl_response",
-#             "rrl_response",
-#             "arl_response",
-#             "irl_response",
-#             "trl",
-#             "orl",
-#             "mrl",
-#             "rrl",
-#             "arl",
-#             "irl",
-#         ]
+    class Meta:
+        model = startups_models.StartupReadinessLevel
+        fields = [
+            "id",
+            "startup_id",
+            "readiness_level_id",
+        ]
