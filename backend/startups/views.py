@@ -382,3 +382,41 @@ class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet):
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CalculatorQuestionAnswerViewSet(BaseViewSet):
+    queryset = startups_models.CalculatorQuestionAnswer.objects
+    serializer_class = startups_serializers.base.CalculatorQuestionAnswerBaseSerializer
+
+    @swagger_auto_schema(
+        request_body=startups_serializers.request.BulkCreateCalculatorQuestionAnswerRequestSerializer,
+        responses={204: ""},
+    )
+    @action(url_path="bulk-create", detail=False, methods=["POST"])
+    def bulk_create(self, request):
+        request_serializer = startups_serializers.request.BulkCreateCalculatorQuestionAnswerRequestSerializer(
+            data=request.data
+        )
+
+        request_serializer.is_valid(raise_exception=True)
+
+        calculator_question_answers = request_serializer.validated_data.get(
+            "calculator_question_answers"
+        )
+
+        calculator_question_answers_object = []
+        for calculator_question_answer in calculator_question_answers:
+            startup = calculator_question_answer.get("startup")
+
+            if not (startup.user.id == request.user.id):
+                continue
+
+            calculator_question_answers_object.append(
+                startups_models.CalculatorQuestionAnswer(**calculator_question_answer)
+            )
+
+        startups_models.CalculatorQuestionAnswer.objects.bulk_create(
+            calculator_question_answers_object
+        )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

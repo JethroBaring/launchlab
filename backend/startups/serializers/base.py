@@ -104,3 +104,20 @@ class StartupReadinessLevelBaseSerializer(serializers.ModelSerializer):
             "startup_id",
             "readiness_level_id",
         ]
+
+
+class CalculatorQuestionAnswerBaseSerializer(serializers.ModelSerializer):
+    startup_id = serializers.PrimaryKeyRelatedField(
+        source="startup", queryset=startups_models.Startup.objects
+    )
+    calculator_question_id = serializers.PrimaryKeyRelatedField(
+        source="criterion", queryset=readinesslevel_models.CalculatorQuestion.objects
+    )
+
+    class Meta:
+        model = startups_models.CalculatorQuestionAnswer
+        fields = [
+            "id",
+            "startup_id",
+            "calculator_question_id",
+        ]

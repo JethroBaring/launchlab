@@ -7,7 +7,10 @@ class UratQuestionBaseSerializer(serializers.ModelSerializer):
     readiness_type_id = serializers.PrimaryKeyRelatedField(
         source="readiness_type", queryset=readinesslevel_models.ReadinessType.objects
     )
-    readiness_type = serializers.CharField(source="readiness_type.get_rl_type_display", read_only=True)
+    readiness_type = serializers.CharField(
+        source="readiness_type.get_rl_type_display", read_only=True
+    )
+
     class Meta:
         model = readinesslevel_models.URATQuestion
         fields = ["id", "question", "readiness_type_id", "readiness_type"]
@@ -54,7 +57,10 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
     )
     level_criteria = LevelCriterionBaseSerializer(many=True)
     scoring_guides = ScoringGuideBaseSerializer(many=True)
-    readiness_type = serializers.CharField(source="readiness_type.get_rl_type_display", read_only=True)
+    readiness_type = serializers.CharField(
+        source="readiness_type.get_rl_type_display", read_only=True
+    )
+
     class Meta:
         model = readinesslevel_models.ReadinessLevel
         fields = [
@@ -66,3 +72,24 @@ class ReadinessLevelBaseSerializer(serializers.ModelSerializer):
             "level_criteria",
             "scoring_guides",
         ]
+
+
+class CalculatorQuestionBaseSerializer(serializers.ModelSerializer):
+    category_id = serializers.PrimaryKeyRelatedField(
+        source="category", queryset=readinesslevel_models.CalculatorCategory.objects
+    )
+
+    class Meta:
+        model = readinesslevel_models.CalculatorQuestion
+        fields = ["id", "question", "score", "category_id"]
+
+
+class CalculatorCategoryBaseSerializer(serializers.ModelSerializer):
+    readiness_type_id = serializers.PrimaryKeyRelatedField(
+        source="readiness_type", queryset=readinesslevel_models.ReadinessType.objects
+    )
+    questions = CalculatorQuestionBaseSerializer(many=True)
+
+    class Meta:
+        model = readinesslevel_models.CalculatorCategory
+        fields = ["id", "category", "readiness_type_id", "questions"]

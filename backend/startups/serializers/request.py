@@ -68,3 +68,9 @@ class AssignMentorsRequestSerializer(serializers.Serializer):
         ),
         write_only=True,
     )
+
+
+class BulkCreateCalculatorQuestionAnswerRequestSerializer(serializers.Serializer):
+    calculator_question_answers = (
+        startups_base_serializers.CalculatorQuestionAnswerBaseSerializer(many=True)
+    )

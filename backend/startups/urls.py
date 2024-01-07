@@ -5,8 +5,9 @@ router = routers.SimpleRouter()
 router.register(r"startups", views.StartupViewSet)
 router.register(r"startup-readiness-levels", views.StartupReadinessLevelViewSet)
 router.register(
-    r"readiness-level-criterion-answer", views.ReadinessLevelCriterionAnswerViewSet
+    r"readiness-level-criterion-answers", views.ReadinessLevelCriterionAnswerViewSet
 )
-router.register(r"urat-question-answer", views.UratQuestionAnswerViewSet)
+router.register(r"urat-question-answers", views.UratQuestionAnswerViewSet)
+router.register(r"calculator-question-answers", views.CalculatorQuestionAnswerViewSet)
 
 urlpatterns = router.urls

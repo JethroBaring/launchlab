@@ -12,6 +12,7 @@ class ReadinessType(BaseModel):
         ORGANIZATIONAL = "O", _("Organizational")
         REGULATORY = "R", _("Regulatory")
         INVESTMENT = "I", _("Investment")
+        COMMERCIALIZATION = "C", _("Commercialization")
 
     rl_type = models.CharField(choices=RLType.choices, max_length=1)
 
@@ -49,4 +50,19 @@ class URATQuestion(BaseModel):
     question = models.CharField(max_length=500)
     readiness_type = models.ForeignKey(
         ReadinessType, on_delete=models.CASCADE, related_name="urat_questions"
+    )
+
+
+class CalculatorCategory(BaseModel):
+    category = models.CharField(max_length=200)
+    readiness_type = models.ForeignKey(
+        ReadinessType, on_delete=models.CASCADE, related_name="calculator_categories"
+    )
+
+
+class CalculatorQuestion(BaseModel):
+    question = models.CharField(max_length=500)
+    score = models.SmallIntegerField()
+    category = models.ForeignKey(
+        CalculatorCategory, on_delete=models.CASCADE, related_name="questions"
     )

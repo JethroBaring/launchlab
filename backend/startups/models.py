@@ -71,6 +71,9 @@ class URATQuestionAnswer(BaseModel):
     response = models.CharField(max_length=500)
     score = models.SmallIntegerField(default=1)
 
+    class Meta:
+        unique_together = ["startup", "urat_question"]
+
 
 class ReadinessLevelCriterionAnswer(BaseModel):
     startup = models.ForeignKey(
@@ -85,3 +88,22 @@ class ReadinessLevelCriterionAnswer(BaseModel):
     )
     score = models.SmallIntegerField()
     remark = models.CharField(max_length=500, null=True, blank=True)
+
+    class Meta:
+        unique_together = ["startup", "criterion"]
+
+
+class CalculatorQuestionAnswer(BaseModel):
+    startup = models.ForeignKey(
+        Startup,
+        on_delete=models.CASCADE,
+        related_name="calculator_answers_answers",
+    )
+    calculator_question = models.ForeignKey(
+        readinesslevel_models.CalculatorQuestion,
+        on_delete=models.CASCADE,
+        related_name="answers",
+    )
+
+    class Meta:
+        unique_together = ["startup", "calculator_question"]
