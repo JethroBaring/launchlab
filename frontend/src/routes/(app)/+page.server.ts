@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
 		if(locals.user.type === "S")
-			throw redirect(302, '/user/home');
+			throw redirect(302, '/user/readiness-level');
 		else if(locals.user.type === "M")
 			throw redirect(302, '/admin/startups/pending');
 		else

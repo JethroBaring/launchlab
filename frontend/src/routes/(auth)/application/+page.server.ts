@@ -1,4 +1,4 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import {fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch }) => {
@@ -6,21 +6,28 @@ export const load: PageServerLoad = async ({ fetch }) => {
 
 	const data = await uratQuestions.json();
 	if (uratQuestions.ok) {
-		return {
-			technologyQuestions: data.results.filter((d) => d.readiness_type === 'Technology'),
-			marketQuestions: data.results.filter((d) => d.readiness_type === 'Market'),
-			acceptanceQuestions: data.results.filter((d) => d.readiness_type === 'Acceptance'),
-			organizationalQuestions: data.results.filter((d) => d.readiness_type === 'Organizational'),
-			regulatoryQuestions: data.results.filter((d) => d.readiness_type === 'Regulatory'),
-			investmentQuestions: data.results.filter((d) => d.readiness_type === 'Investment')
-		};
+		const calculatorQuestions = await fetch('http://127.0.0.1:8000/readinesslevel/calculator-categories/')
+
+		const data2 = await calculatorQuestions.json()
+
+		if(calculatorQuestions.ok) {
+			return {
+				technologyQuestions: data.results.filter((d) => d.readiness_type === 'Technology'),
+				marketQuestions: data.results.filter((d) => d.readiness_type === 'Market'),
+				acceptanceQuestions: data.results.filter((d) => d.readiness_type === 'Acceptance'),
+				organizationalQuestions: data.results.filter((d) => d.readiness_type === 'Organizational'),
+				regulatoryQuestions: data.results.filter((d) => d.readiness_type === 'Regulatory'),
+				investmentQuestions: data.results.filter((d) => d.readiness_type === 'Investment'),
+				calculator: data2.results
+			};
+		}
+		
 	}
 };
 
 export const actions = {
 	application: async ({ request, fetch }) => {
 		const formData = await request.formData();
-
 		if (
 			!Object.values(formData)
 				.filter((key) => key !== 'links' && key !== 'university_name')
@@ -66,6 +73,16 @@ export const actions = {
 				'investment'
 			];
 
+			const categories= [
+				'Technology',
+				'Product Development',
+				'Product Definition/Design',
+				'Competitive Landscape',
+				'Team',
+				'Go-To-Market',
+				'Manufacturing/Supply Chain',
+			]
+
 			const answers: {
 				startup_id: number;
 				urat_question_id: number;
@@ -73,7 +90,10 @@ export const actions = {
 				score: number;
 			}[] = [];
 
-			
+			const calculatorAnswers: {
+				startup_id: number;
+				calculator_question_id: number;
+			}[] = [];
 
 			types.forEach((type) => {
 				for (let i = 0; i < 3; i++) {
@@ -85,6 +105,13 @@ export const actions = {
 					});
 				}
 			});
+
+			categories.forEach((category) => {
+				calculatorAnswers.push({
+					startup_id: startupId,
+					calculator_question_id: parseInt(formData.get(`${category}`) as string)
+				})
+			})
 
 			const urat_answers = await fetch(
 				'http://127.0.0.1:8000/urat-question-answer/bulk-create/',
@@ -99,35 +126,19 @@ export const actions = {
 				}
 			);
 			
-			if(urat_answers.ok) {
+			const calculator_answers = await fetch('http://127.0.0.1:8000/calculator-question-answers/bulk-create/', {
+				method: 'post',
+				headers: {
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify({
+					calculator_question_answers: calculatorAnswers
+				})
+			})
+
+			if(urat_answers.ok && calculator_answers.ok) {
 				throw redirect(302, '/emailsent')
 			}
-
-			// await Promise.all(
-			// 	types.map(async (type) => {
-			// 		for (let i = 0; i < 3; i++) {
-			// 			await fetch('http://127.0.0.1:8000/urat-question-answer/', {
-			// 				method: 'post',
-			// 				headers: {
-			// 					'Content-type': 'application/json'
-			// 				},
-			// 				body: JSON.stringify({
-			// 					startup_id: startupId,
-			// 					urat_question_id: formData.get(`${type}${i}id`),
-			// 					response: formData.get(`${type}${i}`),
-			// 					score: 1
-			// 				})
-			// 			});
-			// 		}
-			// 	})
-			// )
-			// 	.then((values) => {
-			// 		console.log(values);
-			// 		throw redirect(302, '/emailsent');
-			// 	})
-			// 	.catch((error) => {
-			// 		console.log(error);
-			// 	});
 		}
 	}
 };

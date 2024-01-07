@@ -4,8 +4,15 @@
 	import ApplicantGroupInformation from '$lib/components/applicant/ApplicantGroupInformation.svelte';
 	import ApplicantReadinessLevel from '$lib/components/applicant/ApplicantReadinessLevel.svelte';
 	import ApplicantTechnologyCalculator from '$lib/components/applicant/ApplicantTechnologyCalculator.svelte';
+	import AssignMentor from '$lib/components/shared/AssignMentor.svelte';
 	export let data;
-	console.log(data.answers)
+	console.log(data.mentors)
+	let selectedMentor = data.mentors[0].id
+	const handleMentor = (mentor: number) => {
+		selectedMentor = mentor
+		console.log(selectedMentor)
+	}
+
 </script>
 
 
@@ -27,6 +34,9 @@
 					<ApplicantTechnologyCalculator />
 					<div class="divider" />
 					<ApplicantReadinessLevel readiness={data.answers}/>
+					<div class="divider"/>
+					<AssignMentor mentors={data.mentors} {handleMentor}/>
+					
 						<div class="flex gap-5 w-full justify-end">
 							<form action={`/admin/startups/applicants/${data.params}?/reject`} method="post">
 								<button class="btn bg-red-500 hover:bg-red-600 btn-custom text-white normal-case">Reject</button>

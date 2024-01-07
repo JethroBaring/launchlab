@@ -7,30 +7,24 @@
 	import RegulatoryRubricsUpdate from './RegulatoryRubricsUpdate.svelte';
 	import TechnologyRubricsUpdate from './TechnologyRubricsUpdate.svelte';
 	import SpiderGraph from '../shared/SpiderGraph.svelte';
-	import DataPrivacy from '../application/DataPrivacy.svelte';
 
-	export let questions: any, id: number, user: string, scores: any, access: any
+	export let questions: any, id: number, user: string, scores: any, access: any;
 	let check = false;
-	let currentTab = 'Technology';
-	const handleClick = () => {
-		check = !check;
+	let currentType = 'Technology';
+	let currentTab = 'overview';
+
+	const handleClick = (cur: string) => {
+		currentTab = cur;
 	};
 
-	const handleTab = (tab: string) => {
-		currentTab = tab;
+	const handleType = (type: string) => {
+		currentType = type;
 	};
 
-	let currentView = 'Graph';
-
-	const handleView = (view: string) => {
-		currentView = view;
-	};
-
-	console.log(scores.filter((score) => score.readiness_type === "Technology"))
 </script>
 
 <div class="collapse">
-	<input type="checkbox" checked={check} on:click={handleClick} />
+	<input type="checkbox" checked={check} />
 	<div class="collapse-title text-xl font-semibold">
 		<div class="flex gap-3 items-center">
 			<p>Readiness Level</p>
@@ -43,92 +37,94 @@
 	<div class="collapse-content flex flex-col gap-3">
 		<div class="tabs">
 			<a
-				href="#"
-				class="tab tab-lifted"
-				class:tab-active={currentView === 'Graph'}
-				on:click={() => handleView('Technology')}>Graph</a
+				class="tab tab-bordered"
+				class:tab-active={currentTab === 'overview'}
+				on:click={() => handleClick('overview')}>Overview</a
 			>
 			<a
-				href="#"
-				class="tab tab-lifted"
-				class:tab-active={currentView === 'Details'}
-				on:click={() => handleView('Details')}>Details</a
+				class="tab tab-bordered"
+				class:tab-active={currentTab === 'detailed'}
+				on:click={() => handleClick('detailed')}>Detailed Evaluation</a
 			>
 		</div>
-		{#if currentView === "Details"}
-			<div class="tabs">
-				<a
-					href="#"
-					class="tab tab-lifted"
-					class:tab-active={currentTab === 'Technology'}
-					on:click={() => handleTab('Technology')}>Technology</a
-				>
-				<a
-					href="#"
-					class="tab tab-lifted"
-					class:tab-active={currentTab === 'Market'}
-					on:click={() => handleTab('Market')}>Market</a
-				>
-				<a
-					href="#"
-					class="tab tab-lifted"
-					class:tab-active={currentTab === 'Organizational'}
-					on:click={() => handleTab('Organizational')}>Organizational</a
-				>
-				<a
-					href="#"
-					class="tab tab-lifted"
-					class:tab-active={currentTab === 'Acceptance'}
-					on:click={() => handleTab('Acceptance')}>Acceptance</a
-				>
-				<a
-					href="#"
-					class="tab tab-lifted"
-					class:tab-active={currentTab === 'Regulatory'}
-					on:click={() => handleTab('Regulatory')}>Regulatory</a
-				>
-				<a
-					href="#"
-					class="tab tab-lifted"
-					class:tab-active={currentTab === 'Investment'}
-					on:click={() => handleTab('Investment')}>Investment</a
-				>
-			</div>
-				<TechnologyRubricsUpdate
-					questions={questions.filter((question) => question.readiness_type === 'Technology')}
-					{currentTab}
-					scores={scores.filter((score) => score.readiness_type === "Technology")}
-					{access}
-					startupId={id}
-				/>
-				<MarketRubricsUpdate
-					questions={questions.filter((question) => question.readiness_type === 'Market')}
-					{currentTab}
-					scores={scores.filter((score) => score.readiness_type === "Market")}
-				/>
-				<AcceptanceRubricsUpdate
-					questions={questions.filter((question) => question.readiness_type === 'Acceptance')}
-					{currentTab}
-					scores={scores.filter((score) => score.readiness_type === "Acceptance")}
-				/>
-				<OrganizationalRubricsUpdate
-					questions={questions.filter((question) => question.readiness_type === 'Organizational')}
-					{currentTab}
-					scores={scores.filter((score) => score.readiness_type === "Organizational")}
-				/>
-				<RegulatoryRubricsUpdate
-					questions={questions.filter((question) => question.readiness_type === 'Regulatory')}
-					{currentTab}
-					scores={scores.filter((score) => score.readiness_type === "Regulatory")}
-				/>
-				<InvestmentRubricsUpdate
-					questions={questions.filter((question) => question.readiness_type === 'Investment')}
-					{currentTab}
-					scores={scores.filter((score) => score.readiness_type === "Investment")}
-				/>
+		{#if currentTab === 'detailed'}
+		<div class="flex w-full h-10 bg-slate-50">
+			<button
+				class="flex-1 flex justify-center items-center"
+				on:click={() => handleType('Technology')}
+				class:bg-slate-300={currentType === 'Technology'}>Technology</button
+			>
+			<button
+				class="flex-1 flex justify-center items-center"
+				on:click={() => handleType('Market')}
+				class:bg-slate-300={currentType === 'Market'}>Market</button
+			>
+			<button
+				class="flex-1 flex justify-center items-center"
+				on:click={() => handleType('Organizational')}
+				class:bg-slate-300={currentType === 'Organizational'}>Organizational</button
+			>
+			<button
+				class="flex-1 flex justify-center items-center"
+				on:click={() => handleType('Acceptance')}
+				class:bg-slate-300={currentType === 'Acceptance'}>Acceptance</button
+			>
+			<button
+				class="flex-1 flex justify-center items-center"
+				on:click={() => handleType('Regulatory')}
+				class:bg-slate-300={currentType === 'Regulatory'}>Regulatory</button
+			>
+			<button
+				class="flex-1 flex justify-center items-center"
+				on:click={() => handleType('Investment')}
+				class:bg-slate-300={currentType === 'Investment'}>Investment</button
+			>
+		</div>
+			<TechnologyRubricsUpdate
+				questions={questions.filter((question) => question.readiness_type === 'Technology')}
+				currentTab={currentType}
+				scores={scores.filter((score) => score.readiness_type === 'Technology')}
+				{access}
+				startupId={id}
+			/>
+			<MarketRubricsUpdate
+				questions={questions.filter((question) => question.readiness_type === 'Market')}
+				currentTab={currentType}
+				scores={scores.filter((score) => score.readiness_type === 'Market')}
+				{access}
+				startupId={id}
+			/>
+			<AcceptanceRubricsUpdate
+				questions={questions.filter((question) => question.readiness_type === 'Acceptance')}
+				currentTab={currentType}
+				scores={scores.filter((score) => score.readiness_type === 'Acceptance')}
+				{access}
+				startupId={id}
+			/>
+			<OrganizationalRubricsUpdate
+				questions={questions.filter((question) => question.readiness_type === 'Organizational')}
+				currentTab={currentType}
+				scores={scores.filter((score) => score.readiness_type === 'Organizational')}
+				{access}
+				startupId={id}
+			/>
+			<RegulatoryRubricsUpdate
+				questions={questions.filter((question) => question.readiness_type === 'Regulatory')}
+				currentTab={currentType}
+				scores={scores.filter((score) => score.readiness_type === 'Regulatory')}
+				{access}
+				startupId={id}
+			/>
+			<InvestmentRubricsUpdate
+				questions={questions.filter((question) => question.readiness_type === 'Investment')}
+				currentTab={currentType}
+				scores={scores.filter((score) => score.readiness_type === 'Investment')}
+				{access}
+				startupId={id}
+			/>
 		{:else}
 			<div class="w-1/2 mx-auto">
-				<SpiderGraph trl={2} arl={2} irl={5} mrl={6} rrl={4} orl={6}/>
+				<SpiderGraph trl={2} arl={2} irl={5} mrl={6} rrl={4} orl={6} />
 			</div>
 		{/if}
 	</div>
