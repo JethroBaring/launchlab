@@ -8,6 +8,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		else if(locals.user.type === "M")
 			throw redirect(302, '/admin/startups/pending');
 		else
-			throw redirect(302, '/mentor/startups/qualifieds')
+			throw redirect(302, '/mentor/startups/qualified')
 	}
 };

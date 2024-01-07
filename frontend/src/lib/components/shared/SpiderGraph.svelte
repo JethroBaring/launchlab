@@ -1,23 +1,10 @@
 <script lang="ts">
+    import Chart from 'chart.js/auto';
 	import { browser } from '$app/environment';
-	import ApplicantReadinessLevel from '$lib/components/applicant/ApplicantReadinessLevel.svelte';
-	import Icon from '$lib/components/icons/icon.svelte';
-	import { Chart } from 'chart.js/auto';
 	import { onMount } from 'svelte';
-	export let data;
-	const readiness = data.readiness.initial_readiness_level;
-
-	const trl = 1
-	const orl = 1
-	const mrl = 1
-	const rrl = 1
-	const arl = 1
-	const irl = 1
+	export let trl: number, orl: number, mrl: number, rrl: number, arl: number, irl: number;
 	
-
-
 	const redrawChart = () => {
-		let x = 65;
 		let ctx: HTMLCanvasElement;
 		const d = {
 			labels: ['Technology', 'Organizational', 'Market', 'Regulatory', 'Acceptance', 'Investment'],
@@ -45,7 +32,7 @@
 					scales: {
 						r: {
 							min: 1,
-							max: 16
+							max: 9
 						}
 					},
 					responsive: true,
@@ -63,20 +50,6 @@
 		redrawChart();
 	});
 </script>
-
-<svelte:head>
-	<title>Overview</title>
-</svelte:head>
-
-<div class="flex flex-1 flex-col">
-	<div class="flex flex-col flex-1 gap-10">
-		<div class="flex flex-col gap-3 overflow-scroll h-full w-full mx-auto">
-			<h2 class="text-2xl font-bold text-left">Readiness Level</h2>
-			<div class="flex-1 overflow-scroll flex flex-col gap-5">
-				<div class="flex-1 flex items-center justify-center p-14">
-					<canvas id="chart"></canvas>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="flex flex-col">
+    <canvas id="chart"/>
 </div>

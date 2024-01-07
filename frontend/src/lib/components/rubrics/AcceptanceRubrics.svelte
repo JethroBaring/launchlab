@@ -5,7 +5,9 @@
 
 {#each questions as question}
     
-<p>Level {question.level}: {question.name}</p>
+<div>
+	<p>Level {question.level}: {question.name}</p>
+</div>
 <div class="rounded-lg p-5 bg-slate-50">
    
 	<table class="table">

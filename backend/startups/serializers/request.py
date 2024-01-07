@@ -40,7 +40,7 @@ class UpdateUratQuestionAnswerRequestSerializer(serializers.Serializer):
 
 class ReadinessLevelCriterionAnswerRequestSerializer(serializers.Serializer):
     score = serializers.IntegerField()
-    remake = serializers.CharField(required=False)
+    remark = serializers.CharField(required=False, allow_blank=True)
 
 
 class BulkCreateReadinessLevelCriterionAnswerRequestSerializer(serializers.Serializer):

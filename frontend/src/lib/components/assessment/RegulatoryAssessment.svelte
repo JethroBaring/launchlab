@@ -16,7 +16,7 @@
 		answers: string,
 		readiness_type: string
 	) => {
-		const d = await fetch(`http://127.0.0.1:8000/urat-question-answer/${id}/`, {
+		const d = await fetch(`http://127.0.0.1:8000/urat-question-answers/${id}/`, {
 			method: 'put',
 			headers: {
 				'Content-type': 'application/json',

@@ -14,7 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				method: 'POST',
 				headers: {
 					'Authorization': `Bearer ${refresh}`,
-					'Content-Type': 'application/json' // Add this line
+					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
 					refresh: refresh
@@ -45,7 +45,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				'django-insecure-vak*mz%99+#882*g*87x8$%!r=trnnqd)zh2)i$w51ra4cd&eg'
 			) as { user_id?: string };
 
-			const response = await fetch(`http://127.0.0.1:8000/user/${decoded?.user_id}/`, {
+			const response = await fetch(`http://127.0.0.1:8000/user/${decoded?.user_id}/?user_type=${decoded?.user_type}`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${access}`,

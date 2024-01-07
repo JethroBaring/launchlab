@@ -77,7 +77,7 @@ class ReadinessLevelCriterionAnswerBaseSerializer(serializers.ModelSerializer):
         source="criterion", queryset=readinesslevel_models.LevelCriterion.objects
     )
     remark = serializers.CharField(required=False, allow_blank=True)
-
+    readiness_type = serializers.CharField(source="criterion.readiness_level.readiness_type.get_rl_type_display", read_only=True)
     class Meta:
         model = startups_models.ReadinessLevelCriterionAnswer
         fields = [
@@ -86,6 +86,7 @@ class ReadinessLevelCriterionAnswerBaseSerializer(serializers.ModelSerializer):
             "criterion_id",
             "score",
             "remark",
+            "readiness_type"
         ]
 
 

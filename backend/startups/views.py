@@ -53,6 +53,10 @@ class StartupViewSet(
         ):
             queryset = queryset.filter(Q(user_id=user.id) | Q(members__user_id=user.id))
 
+        if not user.is_anonymous and user.user_type == users_models.BaseUser.UserType.MENTOR:
+            # Filter startups associated with the mentor
+            queryset = queryset.filter(mentors=user)
+        
         return queryset.filter(datetime_deleted__isnull=True).all()
 
     @swagger_auto_schema(
@@ -192,6 +196,14 @@ class UratQuestionAnswerViewSet(
     queryset = startups_models.URATQuestionAnswer.objects
     serializer_class = startups_serializers.base.UratQuestionAnswerBaseSerializer
 
+    def get_permissions(self):
+        viewset_action = self.action
+
+        if viewset_action in ["create","bulk_create"]:
+            return []
+
+        return super().get_permissions()
+    
     def get_queryset(self):
         queryset = super().get_queryset()
         request = self.request
@@ -238,8 +250,8 @@ class UratQuestionAnswerViewSet(
         for urat_question_answer in urat_question_answers:
             startup = urat_question_answer.get("startup")
 
-            if not (startup.user.id == request.user.id):
-                continue
+            # if not (startup.user.id == request.user.id):
+            #     continue
 
             urat_question_answers_object.append(
                 startups_models.URATQuestionAnswer(**urat_question_answer)
@@ -303,8 +315,8 @@ class ReadinessLevelCriterionAnswerViewSet(
         for criterion_answer in criterion_answers:
             startup = criterion_answer.get("startup")
 
-            if not (startup.user.id == request.user.id):
-                continue
+            # if not (startup.user.id == request.user.id):
+            #     continue
 
             criterion_answers_object.append(
                 startups_models.ReadinessLevelCriterionAnswer(**criterion_answer)
@@ -370,8 +382,8 @@ class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet):
         for startup_readiness_level in startup_readiness_levels:
             startup = startup_readiness_level.get("startup")
 
-            if not (startup.user.id == request.user.id):
-                continue
+            # if not (startup.user.id == request.user.id):
+            #     continue
 
             startup_readiness_levels_object.append(
                 startups_models.StartupReadinessLevel(**startup_readiness_level)
@@ -408,8 +420,8 @@ class CalculatorQuestionAnswerViewSet(BaseViewSet):
         for calculator_question_answer in calculator_question_answers:
             startup = calculator_question_answer.get("startup")
 
-            if not (startup.user.id == request.user.id):
-                continue
+            # if not (startup.user.id == request.user.id):
+            #     continue
 
             calculator_question_answers_object.append(
                 startups_models.CalculatorQuestionAnswer(**calculator_question_answer)

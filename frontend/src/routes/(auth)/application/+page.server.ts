@@ -66,31 +66,68 @@ export const actions = {
 				'investment'
 			];
 
-			await Promise.all(
-				types.map(async (type) => {
-					for (let i = 0; i < 3; i++) {
-						await fetch('http://127.0.0.1:8000/urat-question-answer/', {
-							method: 'post',
-							headers: {
-								'Content-type': 'application/json'
-							},
-							body: JSON.stringify({
-								startup_id: startupId,
-								urat_question_id: formData.get(`${type}${i}id`),
-								response: formData.get(`${type}${i}`)
-							})
-						});
-					}
-				})
-			)
-				.then((values) => {
-					console.log(values);
-					throw redirect(302, '/emailsent');
-				})
-				.catch((error) => {
-					console.log(error);
-					return fail(400, { credentials: true });
-				});
+			const answers: {
+				startup_id: number;
+				urat_question_id: number;
+				response: string;
+				score: number;
+			}[] = [];
+
+			
+
+			types.forEach((type) => {
+				for (let i = 0; i < 3; i++) {
+					answers.push({
+						startup_id: startupId,
+						urat_question_id: Number.parseInt(formData.get(`${type}${i}id`) as string),
+						response: formData.get(`${type}${i}`) as string,
+						score: 1
+					});
+				}
+			});
+
+			const urat_answers = await fetch(
+				'http://127.0.0.1:8000/urat-question-answer/bulk-create/',
+				{
+					method: 'post',
+					headers: {
+						'Content-type': 'application/json'
+					},
+					body: JSON.stringify({
+						urat_question_answers: answers
+					})
+				}
+			);
+			
+			if(urat_answers.ok) {
+				throw redirect(302, '/emailsent')
+			}
+
+			// await Promise.all(
+			// 	types.map(async (type) => {
+			// 		for (let i = 0; i < 3; i++) {
+			// 			await fetch('http://127.0.0.1:8000/urat-question-answer/', {
+			// 				method: 'post',
+			// 				headers: {
+			// 					'Content-type': 'application/json'
+			// 				},
+			// 				body: JSON.stringify({
+			// 					startup_id: startupId,
+			// 					urat_question_id: formData.get(`${type}${i}id`),
+			// 					response: formData.get(`${type}${i}`),
+			// 					score: 1
+			// 				})
+			// 			});
+			// 		}
+			// 	})
+			// )
+			// 	.then((values) => {
+			// 		console.log(values);
+			// 		throw redirect(302, '/emailsent');
+			// 	})
+			// 	.catch((error) => {
+			// 		console.log(error);
+			// 	});
 		}
 	}
 };

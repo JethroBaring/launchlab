@@ -1,4 +1,4 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 
 export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
@@ -12,28 +12,36 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 
 	const data = await response.json();
 	if (response.ok) {
-		const rubrics = await fetch('http://127.0.0.1:8000/readinesslevel/readiness-level/', {
+		const rubrics = await fetch('http://127.0.0.1:8000/readinesslevel/readiness-levels/', {
 			method: 'get',
 			headers: {
 				Authorization: `Bearer ${cookies.get('Access')}`
 			}
 		});
 
-		const rubrics2 = await fetch('http://127.0.0.1:8000/readinesslevel/readiness-level/?page=2', {
+		const rubrics2 = await fetch('http://127.0.0.1:8000/readinesslevel/readiness-levels/?page=2', {
 			method: 'get',
 			headers: {
 				Authorization: `Bearer ${cookies.get('Access')}`
 			}
 		});
+
+		const haveScores = await fetch(`http://127.0.0.1:8000/readiness-level-criterion-answers/?page_size=324&startup_id=${params.applicant}`, {
+			method: 'get',
+			headers: {
+				Authorization: `Bearer ${cookies.get('Access')}`
+			}
+		})
 
 		const rubrics_data = await rubrics.json();
 		const rubrics2_data = await rubrics2.json();
-
-		if (rubrics.ok) {
+		const scores_data = await haveScores.json()
+		if (rubrics.ok && rubrics2.ok && haveScores.ok) {
 			return {
 				info: data,
 				questions: rubrics_data.results.concat(rubrics2_data.results),
-				access: cookies.get('Access')
+				access: cookies.get('Access'),
+				scores: scores_data.results
 			};
 		}
 	}
@@ -52,64 +60,42 @@ export const actions = {
 			'regulatory',
 			'investment'
 		];
-		//console.log(formData)
 
-		// for(let type = 0; type < 6; type++) {
-		// 	console.log(types[type])
-		// 	for(let level = 1; level <= 9; level++) {
-		// 		for(let criteria = 1; criteria <= 6; criteria++) {
-		// 			// console.log(`${types[type]}Criteria${level}${criteria}`)
-		// 			// console.log(`${types[type]}${level}${criteria}`)
-		// 			// console.log(`${types[type]}${level}${criteria}`)
-		// 			console.log({
-		// 				startup_id: params.applicant,
-		// 				criterion_id: formData.get(`${types[type]}Criteria${level}${criteria}`),
-		// 				score: formData.get(`${types[type]}${level}${criteria}`),
-		// 				remark: formData.get(`${types[type]}Remark${level}${criteria}`)
-		// 			})
-		// 		}
-		// 	}
-		// }
-		await Promise.all(
-			types.map(async (type) => {
-				for (let level = 1; level <= 9; level++) {
-					for (let criteria = 1; criteria <= 6; criteria++) {
-						const response = await fetch('http://127.0.0.1:8000/readiness-level-criterion-answer/', {
-							method: 'post',
-							headers: {
-								'Content-type': 'application/json',
-								Authorization: `Bearer ${cookies.get('Access')}`
-							},
-							body: JSON.stringify({
-								startup_id: 123123,
-								criterion_id: formData.get(`${type}Criteria${level}${criteria}`),
-								score: formData.get(`${type}${level}${criteria}`),
-								remark: formData.get(`${type}Remark${level}${criteria}`)
-							})
-						});
+		const answers: {startup_id: number, criterion_id: number, score: number, remark: string}[] = [] 
 
-						if(response.ok) {
-							console.log("ok")
-						} else {
-							console.log({
-								startup_id: params.applicant,
-								criterion_id: formData.get(`${type}Criteria${level}${criteria}`),
-								score: formData.get(`${type}${level}${criteria}`),
-								remark: formData.get(`${type}Remark${level}${criteria}`),
-								criteria: type
-							})
-						}
-					}
+		
+
+		types.forEach((type) => {
+			for (let level = 1; level <= 9; level++) {
+				for (let criteria = 1; criteria <= 6; criteria++) {
+					answers.push({
+							startup_id: Number.parseInt(params.applicant as string),
+							criterion_id: Number.parseInt(formData.get(`${type}Criteria${level}${criteria}`) as string),
+							score: Number.parseInt(formData.get(`${type}${level}${criteria}`) as string),
+							remark: formData.get(`${type}Remark${level}${criteria}`) as string
+					})
 				}
+			}
+		})
+
+
+		try {
+			const rubrics_scores = await fetch('http://127.0.0.1:8000/readiness-level-criterion-answers/bulk-create/', {
+			method: 'post',
+			headers: {
+				'Content-type': 'application/json',
+				Authorization: `Bearer ${cookies.get('Access')}`
+			},
+			body: JSON.stringify({
+				criterion_answers: answers
 			})
-		)
-			.then((values) => {
-				console.log('hello values');
-			})
-			.catch((error) => {
-				console.log(error)
-				console.log("hello error");
-				return fail(400, { credentials: true });
-			});
+		})
+
+		if(rubrics_scores.ok) {
+			throw redirect(302, `/mentor/startups/qualified/${params.applicant}`)
+		}
+		} catch (error) {
+			console.log(error)
+		}
 	}
 };

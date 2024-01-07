@@ -66,77 +66,28 @@
 	let technologyLevel = 1,
 		commercializationLevel = 1;
 
-	const updateTech = (techNumber: number) => {
-		tech1 = techNumber >= 1 ? 'yes' : 'no';
-		tech2 = techNumber >= 2 ? 'yes' : 'no';
-		tech3 = techNumber >= 3 ? 'yes' : 'no';
-		tech4 = techNumber >= 4 ? 'yes' : 'no';
-		tech5 = techNumber >= 5 ? 'yes' : 'no';
-		tech = techNumber;
-		updateLevel();
-	};
-
-	const updateDev = (devNumber: number) => {
-		dev1 = devNumber >= 1 ? 'yes' : 'no';
-		dev2 = devNumber >= 2 ? 'yes' : 'no';
-		dev3 = devNumber >= 3 ? 'yes' : 'no';
-		dev4 = devNumber >= 4 ? 'yes' : 'no';
-		dev5 = devNumber >= 5 ? 'yes' : 'no';
-		dev = devNumber;
-		updateLevel();
-	};
-
-	const updateDef = (defNumber: number) => {
-		def1 = defNumber >= 1 ? 'yes' : 'no';
-		def2 = defNumber >= 2 ? 'yes' : 'no';
-		def3 = defNumber >= 3 ? 'yes' : 'no';
-		def4 = defNumber >= 4 ? 'yes' : 'no';
-		def5 = defNumber >= 5 ? 'yes' : 'no';
-		def = defNumber;
-		updateLevel();
-	};
-
-	const updateComp = (compNumber: number) => {
-		comp1 = compNumber >= 1 ? 'yes' : 'no';
-		comp2 = compNumber >= 2 ? 'yes' : 'no';
-		comp3 = compNumber >= 3 ? 'yes' : 'no';
-		comp4 = compNumber >= 4 ? 'yes' : 'no';
-		comp5 = compNumber >= 5 ? 'yes' : 'no';
-		comp = compNumber;
-		updateLevel();
-	};
-
-	const updateTeam = (teamNumber: number) => {
-		team1 = teamNumber >= 1 ? 'yes' : 'no';
-		team2 = teamNumber >= 2 ? 'yes' : 'no';
-		team3 = teamNumber >= 3 ? 'yes' : 'no';
-		team4 = teamNumber >= 4 ? 'yes' : 'no';
-		team5 = teamNumber >= 5 ? 'yes' : 'no';
-		team = teamNumber;
-		updateLevel();
-	};
-
-	const updateMarket = (marketNumber: number) => {
-		market1 = marketNumber >= 1 ? 'yes' : 'no';
-		market2 = marketNumber >= 2 ? 'yes' : 'no';
-		market3 = marketNumber >= 3 ? 'yes' : 'no';
-		market4 = marketNumber >= 4 ? 'yes' : 'no';
-		market5 = marketNumber >= 5 ? 'yes' : 'no';
-		market = marketNumber;
-		updateLevel();
-	};
-
-	const updateChain = (chainNumber: number) => {
-		chain1 = chainNumber >= 1 ? 'yes' : 'no';
-		chain2 = chainNumber >= 2 ? 'yes' : 'no';
-		chain3 = chainNumber >= 3 ? 'yes' : 'no';
-		chain4 = chainNumber >= 4 ? 'yes' : 'no';
-		chain5 = chainNumber >= 5 ? 'yes' : 'no';
-		chain = chainNumber;
-		updateLevel();
-	};
-
 	const updateLevel = () => {
+		technologyLevel = 1
+		commercializationLevel = 1
+		tlevel1 = 'no'
+		tlevel2 = 'no'
+		tlevel3 = 'no'
+		tlevel4 = 'no'
+		tlevel5 = 'no'
+		tlevel6 = 'no'
+		tlevel7 = 'no'
+		tlevel8 = 'no'
+		tlevel9 = 'no'
+		clevel1 = 'no'
+		clevel2 = 'no'
+		clevel3 = 'no'
+		clevel4 = 'no'
+		clevel5 = 'no'
+		clevel6 = 'no'
+		clevel7 = 'no'
+		clevel8 = 'no'
+		clevel9 = 'no'
+
 		if (tech1 === 'yes') {
 			tlevel1 = 'yes';
 		}
@@ -233,9 +184,80 @@
 			commercializationLevel = 1;
 		}
 
-		console.log(technologyLevel)
-		console.log(commercializationLevel)
+		console.log("technology: " + technologyLevel)
+		console.log("commercialization: " + commercializationLevel)
 		console.log(tech, dev, def, comp, team, market, chain)
+	};
+
+	const updateTech = (techNumber: number) => {
+		tech1 = techNumber >= 1 ? 'yes' : 'no';
+		tech2 = techNumber >= 2 ? 'yes' : 'no';
+		tech3 = techNumber >= 3 ? 'yes' : 'no';
+		tech4 = techNumber >= 4 ? 'yes' : 'no';
+		tech5 = techNumber >= 5 ? 'yes' : 'no';
+		console.log(tech1, tech2, tech3, tech4, tech5)
+		tech = techNumber;
+		updateLevel();
+	};
+
+	const updateDev = (devNumber: number) => {
+		dev1 = devNumber >= 1 ? 'yes' : 'no';
+		dev2 = devNumber >= 2 ? 'yes' : 'no';
+		dev3 = devNumber >= 3 ? 'yes' : 'no';
+		dev4 = devNumber >= 4 ? 'yes' : 'no';
+		dev5 = devNumber >= 5 ? 'yes' : 'no';
+		dev = devNumber;
+		updateLevel();
+	};
+
+	const updateDef = (defNumber: number) => {
+		def1 = defNumber >= 1 ? 'yes' : 'no';
+		def2 = defNumber >= 2 ? 'yes' : 'no';
+		def3 = defNumber >= 3 ? 'yes' : 'no';
+		def4 = defNumber >= 4 ? 'yes' : 'no';
+		def5 = defNumber >= 5 ? 'yes' : 'no';
+		def = defNumber;
+		updateLevel();
+	};
+
+	const updateComp = (compNumber: number) => {
+		comp1 = compNumber >= 1 ? 'yes' : 'no';
+		comp2 = compNumber >= 2 ? 'yes' : 'no';
+		comp3 = compNumber >= 3 ? 'yes' : 'no';
+		comp4 = compNumber >= 4 ? 'yes' : 'no';
+		comp5 = compNumber >= 5 ? 'yes' : 'no';
+		comp = compNumber;
+		updateLevel();
+	};
+
+	const updateTeam = (teamNumber: number) => {
+		team1 = teamNumber >= 1 ? 'yes' : 'no';
+		team2 = teamNumber >= 2 ? 'yes' : 'no';
+		team3 = teamNumber >= 3 ? 'yes' : 'no';
+		team4 = teamNumber >= 4 ? 'yes' : 'no';
+		team5 = teamNumber >= 5 ? 'yes' : 'no';
+		team = teamNumber;
+		updateLevel();
+	};
+
+	const updateMarket = (marketNumber: number) => {
+		market1 = marketNumber >= 1 ? 'yes' : 'no';
+		market2 = marketNumber >= 2 ? 'yes' : 'no';
+		market3 = marketNumber >= 3 ? 'yes' : 'no';
+		market4 = marketNumber >= 4 ? 'yes' : 'no';
+		market5 = marketNumber >= 5 ? 'yes' : 'no';
+		market = marketNumber;
+		updateLevel();
+	};
+
+	const updateChain = (chainNumber: number) => {
+		chain1 = chainNumber >= 1 ? 'yes' : 'no';
+		chain2 = chainNumber >= 2 ? 'yes' : 'no';
+		chain3 = chainNumber >= 3 ? 'yes' : 'no';
+		chain4 = chainNumber >= 4 ? 'yes' : 'no';
+		chain5 = chainNumber >= 5 ? 'yes' : 'no';
+		chain = chainNumber;
+		updateLevel();
 	};
 
 	updateLevel();
@@ -270,7 +292,6 @@
 						type="radio"
 						name="technology"
 						on:click={() => updateTech(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -285,7 +306,6 @@
 						type="radio"
 						name="technology"
 						on:click={() => updateTech(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -301,7 +321,6 @@
 						type="radio"
 						name="technology"
 						on:click={() => updateTech(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -317,7 +336,6 @@
 						type="radio"
 						name="technology"
 						on:click={() => updateTech(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -353,7 +371,6 @@
 						type="radio"
 						name="development"
 						on:click={() => updateDev(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -368,7 +385,6 @@
 						type="radio"
 						name="development"
 						on:click={() => updateDev(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -384,7 +400,6 @@
 						type="radio"
 						name="development"
 						on:click={() => updateDev(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -400,7 +415,6 @@
 						type="radio"
 						name="development"
 						on:click={() => updateDev(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -436,7 +450,6 @@
 						type="radio"
 						name="definition"
 						on:click={() => updateDef(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -452,7 +465,6 @@
 						type="radio"
 						name="definition"
 						on:click={() => updateDef(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -468,7 +480,6 @@
 						type="radio"
 						name="definition"
 						on:click={() => updateDef(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -485,7 +496,6 @@
 						type="radio"
 						name="definition"
 						on:click={() => updateDef(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -525,7 +535,6 @@
 						type="radio"
 						name="competition"
 						on:click={() => updateComp(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -541,7 +550,6 @@
 						type="radio"
 						name="competition"
 						on:click={() => updateComp(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -558,7 +566,6 @@
 						type="radio"
 						name="competition"
 						on:click={() => updateComp(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -574,7 +581,6 @@
 						type="radio"
 						name="competition"
 						on:click={() => updateComp(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -613,7 +619,6 @@
 						type="radio"
 						name="team"
 						on:click={() => updateTeam(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -629,7 +634,6 @@
 						type="radio"
 						name="team"
 						on:click={() => updateTeam(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -645,7 +649,6 @@
 						type="radio"
 						name="team"
 						on:click={() => updateTeam(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -661,7 +664,6 @@
 						type="radio"
 						name="team"
 						on:click={() => updateTeam(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -699,7 +701,6 @@
 						type="radio"
 						name="market"
 						on:click={() => updateMarket(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -714,7 +715,6 @@
 						type="radio"
 						name="market"
 						on:click={() => updateMarket(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -730,7 +730,6 @@
 						type="radio"
 						name="market"
 						on:click={() => updateMarket(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -746,7 +745,6 @@
 						type="radio"
 						name="market"
 						on:click={() => updateMarket(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -784,7 +782,6 @@
 						type="radio"
 						name="chain"
 						on:click={() => updateChain(2)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -799,7 +796,6 @@
 						type="radio"
 						name="chain"
 						on:click={() => updateChain(3)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -815,7 +811,6 @@
 						type="radio"
 						name="chain"
 						on:click={() => updateChain(4)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>
@@ -831,7 +826,6 @@
 						type="radio"
 						name="chain"
 						on:click={() => updateChain(5)}
-						id="eligibilityDisagree"
 						class="radio"
 						value="false"
 					/>

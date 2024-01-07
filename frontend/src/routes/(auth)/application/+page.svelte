@@ -29,7 +29,7 @@
 			'investment',
 			'calculator'
 		],
-		currentActive = 10;
+		currentActive = 0;
 
 	const handleStep = (stepIncrement: number) => {
 		currentActive += stepIncrement;
