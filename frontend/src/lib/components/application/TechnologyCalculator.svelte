@@ -14,7 +14,7 @@
 			<label class="label" for="projectTitle">
 				<span class="label-text text-base">{category.category}</span>
 			</label>
-			{#each category.questions as question}
+			{#each category.questions as question, i}
 			<div class="form-control">
 				<label class="label justify-normal gap-3 cursor-pointer" for="eligibilityAgree">
 					<input
@@ -22,7 +22,7 @@
 						name={category.category}
 						class="radio"
 						value={question.id}
-						checked
+						checked={i === 0}
 					/>
 					<span class="label-text"
 						>{question.question}</span

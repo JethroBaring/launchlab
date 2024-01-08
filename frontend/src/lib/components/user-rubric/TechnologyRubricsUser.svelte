@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from "../icons/icon.svelte";
 
-    export let questions: any, currentTab: string, scores: any
+    export let questions: any, currentTab: string, scores: any, readiness_level: any
 
 </script>
 <div class="flex flex-col gap-5" class:hidden={currentTab !== "Technology"}>
@@ -9,7 +9,7 @@
 {#each questions as question, index}
     
 <div class="flex gap-3">
-	<input type="radio" name="technologyReadinessLevel" class="radio">
+	<input type="radio" name="technologyReadinessLevel" class="radio" checked={readiness_level.readiness_level === index+1}>
 	<p>Level {question.level}: {question.name}</p>
 </div><div class="rounded-lg p-5 bg-slate-50">
    

@@ -14,3 +14,6 @@ class UratQuestionAnswerQuerySerializer(serializers.Serializer):
 class ReadinessLevelCriterionAnswerQuerySerializer(serializers.Serializer):
     startup_id = serializers.IntegerField(required=False)
     criterion_id = serializers.IntegerField(required=False)
+
+class StartupReadinessLevelQuerySerializer(serializers.Serializer):
+    startup_id = serializers.IntegerField(required=False)

@@ -31,8 +31,11 @@
 				options: {
 					scales: {
 						r: {
-							min: 1,
-							max: 9
+							min: 0,
+							max: 9,
+							ticks: {
+								stepSize: 1
+							}
 						}
 					},
 					responsive: true,

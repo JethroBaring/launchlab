@@ -2,7 +2,7 @@ from rest_framework import serializers
 from startups import models as startups_models
 from drf_yasg.utils import swagger_serializer_method
 from readinesslevel import models as readinesslevel_models
-
+from startups.utils import calculate_levels
 
 class StartupMemberBaseSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(source="user", read_only=True)
@@ -16,7 +16,6 @@ class StartupMemberBaseSerializer(serializers.ModelSerializer):
 class StartupBaseSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(source="user", read_only=True)
     members = serializers.SerializerMethodField(method_name="_members")
-
     class Meta:
         model = startups_models.Startup
         fields = [
@@ -91,15 +90,18 @@ class StartupReadinessLevelBaseSerializer(serializers.ModelSerializer):
         source="startup", queryset=startups_models.Startup.objects
     )
     readiness_level_id = serializers.PrimaryKeyRelatedField(
-        source="criterion", queryset=readinesslevel_models.ReadinessLevel.objects
+        source="readiness_level", queryset=readinesslevel_models.ReadinessLevel.objects
     )
-
+    readiness_level = serializers.IntegerField(source="readiness_level.level", read_only=True)
+    readiness_type = serializers.CharField(source="readiness_level.readiness_type.get_rl_type_display", read_only=True)
     class Meta:
         model = startups_models.StartupReadinessLevel
         fields = [
             "id",
             "startup_id",
             "readiness_level_id",
+            "readiness_level",
+            "readiness_type"
         ]
 
 
@@ -108,9 +110,9 @@ class CalculatorQuestionAnswerBaseSerializer(serializers.ModelSerializer):
         source="startup", queryset=startups_models.Startup.objects
     )
     calculator_question_id = serializers.PrimaryKeyRelatedField(
-        source="criterion", queryset=readinesslevel_models.CalculatorQuestion.objects
+        source="calculator_question", queryset=readinesslevel_models.CalculatorQuestion.objects
     )
-
+    
     class Meta:
         model = startups_models.CalculatorQuestionAnswer
         fields = [

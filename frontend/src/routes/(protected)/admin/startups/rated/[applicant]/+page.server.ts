@@ -34,11 +34,21 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 
 		const mentor_data = await mentor.json()
 
-		if (urat_answers.ok) {
+		const calculator = await fetch(`http://127.0.0.1:8000/startups/${params.applicant}/calculator-final-scores/`, {
+			method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+		})
+
+		const calculator_data = await calculator.json()
+
+		if (urat_answers.ok && mentor.ok && calculator.ok) {
 			return {
 				info: data,
 				answers: answers_data.results,
-				mentors: mentor_data.results
+				mentors: mentor_data.results,
+				calculator: calculator_data
 			};
 		}
 	}

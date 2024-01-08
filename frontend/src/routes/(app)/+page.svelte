@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Header, Hero, HowItWork, AboutUs, Footer } from '$lib/components/app';
+	import Calculator from '$lib/components/application/calculator.svelte';
 </script>
 <svelte:head>
 	<title>ChumCheck</title>
@@ -9,9 +10,6 @@
 	<div class="w-4/5 mx-auto">
 		<Header />
 		<Hero />
-		<div class="tooltip" data-tip="Comprehensive understanding and documentation of basic scientific principles underpinning the technology.">
-			<input type="radio">
-		</div>
 		<HowItWork />
 		<AboutUs />
 		<Footer />

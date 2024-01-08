@@ -23,7 +23,7 @@
 				<div class="flex-1 overflow-scroll">
 					<div class="h-0">
 						<div class="flex flex-col gap-5">
-							<QualifiedReadinessLevelUser questions={data.questions} scores={data.scores} />
+							<QualifiedReadinessLevelUser questions={data.questions} scores={data.scores} readiness={data.readiness}/>
 						</div>
 					</div>
 				</div>

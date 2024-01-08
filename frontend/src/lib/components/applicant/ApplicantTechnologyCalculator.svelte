@@ -3,6 +3,7 @@
 	import Chart from 'chart.js/auto';
 	import Icon from '../icons/icon.svelte';
 	import { onMount } from 'svelte';
+	export let calculator: any
 	let check = false;
 	let show = true;
 
@@ -10,22 +11,23 @@
 		check = !check;
 	};
 
-    const trl = 1
-	const orl = 2
-	const mrl = 3
-	const rrl = 4
-	const arl = 5
-	const irl = 6
+    const technology = calculator.technology_score
+	const product_development = calculator.product_development
+	const product_definition = calculator.product_definition
+	const competitive_landscape = calculator.competitive_landscape
+	const team = calculator.team
+	const go_to_market = calculator.go_to_market
+	const supply_chain = calculator.supply_chain
 
 	const redrawChart = () => {
 		let x = 65;
 		let ctx: HTMLCanvasElement;
 		const d = {
-			labels: ['Technology', 'Organizational', 'Market', 'Regulatory', 'Acceptance', 'Investment'],
+			labels: ['Technology', 'Product Development', 'Product Definition', 'Competitive Landscape', 'Team', 'Go-To-Market', 'Supply Chain'],
 			datasets: [
 				{
 					label: 'Readiness Levels',
-					data: [trl, orl, mrl, rrl, arl, irl],
+					data: [technology, product_development, product_definition, competitive_landscape, team, go_to_market, supply_chain],
 					fill: true,
 					backgroundColor: 'rgba(54, 162, 235, 0.2)',
 					borderColor: 'rgb(54, 162, 235)',
@@ -45,8 +47,11 @@
 				options: {
 					scales: {
 						r: {
-							min: 1,
-							max: 16
+							min: 0,
+							max: 5,
+							ticks: {
+								stepSize: 1
+							}
 						}
 					},
 					responsive: true,
@@ -75,7 +80,12 @@
 			/>
 		</div>
 	</div>
-	<div class="collapse-content flex flex-col gap-3">
+	<div class="collapse-content flex flex-col gap-3 relative">
+		<div class="absolute top-0">
+			<p class="font-medium text-base">Technology Level: <span class="font-bold">{calculator.technology_level}</span></p>
+			<p class="font-medium text-base">Commercialization Level: <span class="font-bold">{calculator.commercialization_level}</span></p>
+
+		</div>
         <canvas id="calculator"/>
     </div>
 </div>

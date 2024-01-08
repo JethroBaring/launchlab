@@ -23,14 +23,11 @@
 					<div class="divider" />
 					<ApplicantGroupInformation groupName={data.info.group_name} leaderName={data.info.member_1_name} leaderEmail={data.info.member_1_email} leaderNumber={data.info.member_1_number} members={data.info.members} university={data.info.university_name}/>
 					<div class="divider" />
-					<ApplicantTechnologyCalculator />
+					<ApplicantTechnologyCalculator calculator={data.calculator}/>
 					<div class="divider"/>
 
 					<ApplicantAssessment questions={data.questions} answers={data.answers} access={data.access}/> 
 					<div class="flex gap-5 w-full justify-end">
-						<!-- <form action={`/admin/startups/applicants/${data.params}?/reject`} method="post">
-							<button class="btn bg-red-500 hover:bg-red-600 btn-custom text-white normal-case">Reject</button>
-						</form> -->
 						<form action={`/admin/startups/pending/${data.info.id}?/rate`} method="post">
 							<button class="btn bg-green-500 hover:bg-green-600 btn-custom text-white normal-case">Rate</button>
 						</form>

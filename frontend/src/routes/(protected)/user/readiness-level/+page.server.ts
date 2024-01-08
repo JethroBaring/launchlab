@@ -33,14 +33,28 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 			}
 		})
 
+		const readiness_level = await fetch(
+			`http://127.0.0.1:8000/startup-readiness-levels/?startup_id=${parseInt(data.results[0].id)}`,
+			{
+				method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
+
 		const rubrics_data = await rubrics.json();
 		const rubrics2_data = await rubrics2.json();
 		const scores_data = await haveScores.json()
+		const readiness_data = await readiness_level.json()
 
-		return {
-			questions: rubrics_data.results.concat(rubrics2_data.results),
-			scores: scores_data.results
-		};
+		if(rubrics.ok && rubrics2.ok && haveScores.ok && readiness_level.ok) {
+			return {
+				questions: rubrics_data.results.concat(rubrics2_data.results),
+				scores: scores_data.results,
+				readiness: readiness_data.results
+			};	
+		}
 	}
 
 	throw error(404);

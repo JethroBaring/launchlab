@@ -2,7 +2,6 @@
 	import { technologyReadinessLevel } from '$lib/constants';
 	import TechnologyAssessment from '../assessment/TechnologyAssessment.svelte';
 
-	export let currentActive: number, calculatorQuestions: any
 	let tech: number = 1,
 		dev: number = 1,
 		def: number = 1,
@@ -263,7 +262,7 @@
 	updateLevel();
 </script>
 
-<div class="flex-1 overflow-scroll mb-5 px-6" class:hidden={currentActive !== 10}>
+<div class="flex-1 overflow-scroll mb-5 px-6">
 	<div class="h-0 flex flex-col gap-3">
 		<!-- Category 1 -->
 		<div class="form-control">

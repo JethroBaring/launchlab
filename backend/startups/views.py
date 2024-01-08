@@ -12,7 +12,6 @@ from django.utils import timezone
 from django.db.models import Q, Sum, Subquery, OuterRef
 from startups import utils as startups_utils
 
-
 class StartupViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
@@ -297,6 +296,22 @@ class StartupViewSet(
             ).data
         )
 
+    @action(url_path="calculator-final-scores", detail=True, methods=["GET"])
+    def calculator_final_scores(self, request, pk):
+        startup = self.get_object()
+        calculator_values = startups_utils.calculate_levels(pk)
+
+        return Response({
+            "technology_level": calculator_values[0],
+            "commercialization_level": calculator_values[1],
+            "technology_score": calculator_values[2],
+            "product_development": calculator_values[3],
+            "product_definition": calculator_values[4],
+            "competitive_landscape": calculator_values[5],
+            "team": calculator_values[6],
+            "go_to_market": calculator_values[7],
+            "supply_chain": calculator_values[8]
+        })
 
 class UratQuestionAnswerViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet, mixins.UpdateModelMixin
@@ -463,10 +478,38 @@ class ReadinessLevelCriterionAnswerViewSet(
         )
 
 
-class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet):
+class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet, mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin):
     queryset = startups_models.StartupReadinessLevel.objects
     serializer_class = startups_serializers.base.StartupReadinessLevelBaseSerializer
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        request = self.request
 
+        serializer = (
+            startups_serializers.query.StartupReadinessLevelQuerySerializer(
+                data=request.query_params
+            )
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        startup_id = serializer.validated_data.get("startup_id")
+        if startup_id:
+            queryset = queryset.filter(startup_id=startup_id)
+
+
+        return queryset.all()
+    
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
@@ -503,11 +546,18 @@ class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class CalculatorQuestionAnswerViewSet(BaseViewSet):
     queryset = startups_models.CalculatorQuestionAnswer.objects
     serializer_class = startups_serializers.base.CalculatorQuestionAnswerBaseSerializer
 
+    def get_permissions(self):
+        viewset_action = self.action
+
+        if viewset_action in ["bulk_create"]:
+            return []
+
+        return super().get_permissions()
+    
     @swagger_auto_schema(
         request_body=startups_serializers.request.BulkCreateCalculatorQuestionAnswerRequestSerializer,
         responses={204: ""},

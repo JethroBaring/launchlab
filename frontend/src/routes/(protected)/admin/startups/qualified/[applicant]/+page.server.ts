@@ -26,23 +26,37 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 			}
 		});
 
-		const haveScores = await fetch(`http://127.0.0.1:8000/readiness-level-criterion-answers/?page_size=324&startup_id=${params.applicant}`, {
-			method: 'get',
-			headers: {
-				Authorization: `Bearer ${cookies.get('Access')}`
+		const haveScores = await fetch(
+			`http://127.0.0.1:8000/readiness-level-criterion-answers/?page_size=324&startup_id=${params.applicant}`,
+			{
+				method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
 			}
-		})
+		);
+
+		const readiness_level = await fetch(
+			`http://127.0.0.1:8000/startup-readiness-levels/?startup_id=${params.applicant}`,
+			{
+				method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
 
 		const rubrics_data = await rubrics.json();
 		const rubrics2_data = await rubrics2.json();
-		const scores_data = await haveScores.json()
-
-		if (rubrics.ok && rubrics2.ok && haveScores.ok) {
+		const scores_data = await haveScores.json();
+		const readiness_data = await readiness_level.json()
+		if (rubrics.ok && rubrics2.ok && haveScores.ok && readiness_level.ok) {
 			return {
 				info: data,
 				questions: rubrics_data.results.concat(rubrics2_data.results),
 				access: cookies.get('Access'),
 				scores: scores_data.results,
+				readiness: readiness_data.results
 			};
 		}
 	}
@@ -62,41 +76,62 @@ export const actions = {
 			'investment'
 		];
 
-		const answers: {startup_id: number, criterion_id: number, score: number, remark: string}[] = [] 
-
-		
+		const answers: { startup_id: number; criterion_id: number; score: number; remark: string }[] =
+			[];
+		const readinesslevels: { startup_id: number; readiness_level_id: number }[] = [];
 
 		types.forEach((type) => {
+			readinesslevels.push({
+				startup_id: Number.parseInt(params.applicant as string),
+				readiness_level_id: parseInt(formData.get(`${type}ReadinessLevel`) as string)
+			});
 			for (let level = 1; level <= 9; level++) {
 				for (let criteria = 1; criteria <= 6; criteria++) {
 					answers.push({
-							startup_id: Number.parseInt(params.applicant as string),
-							criterion_id: Number.parseInt(formData.get(`${type}Criteria${level}${criteria}`) as string),
-							score: Number.parseInt(formData.get(`${type}${level}${criteria}`) as string),
-							remark: formData.get(`${type}Remark${level}${criteria}`) as string
-					})
+						startup_id: Number.parseInt(params.applicant as string),
+						criterion_id: Number.parseInt(
+							formData.get(`${type}Criteria${level}${criteria}`) as string
+						),
+						score: Number.parseInt(formData.get(`${type}${level}${criteria}`) as string),
+						remark: formData.get(`${type}Remark${level}${criteria}`) as string
+					});
 				}
 			}
-		})
-
+		});
 
 		try {
-			const rubrics_scores = await fetch('http://127.0.0.1:8000/readiness-level-criterion-answers/bulk-create/', {
-			method: 'post',
-			headers: {
-				'Content-type': 'application/json',
-				Authorization: `Bearer ${cookies.get('Access')}`
-			},
-			body: JSON.stringify({
-				criterion_answers: answers
-			})
-		})
+			const rubrics_scores = await fetch(
+				'http://127.0.0.1:8000/readiness-level-criterion-answers/bulk-create/',
+				{
+					method: 'post',
+					headers: {
+						'Content-type': 'application/json',
+						Authorization: `Bearer ${cookies.get('Access')}`
+					},
+					body: JSON.stringify({
+						criterion_answers: answers
+					})
+				}
+			);
 
-		if(rubrics_scores.ok) {
-			throw redirect(302, `/admin/startups/qualified/${params.applicant}`)
-		}
+			if (rubrics_scores.ok) {
+				const levels = await fetch('http://127.0.0.1:8000/startup-readiness-levels/bulk-create/', {
+					method: 'post',
+					headers: {
+						'Content-type': 'application/json',
+						Authorization: `Bearer ${cookies.get('Access')}`
+					},
+					body: JSON.stringify({
+						startup_readiness_levels: readinesslevels
+					})
+				});
+
+				if (levels.ok) {
+					throw redirect(302, `/admin/startups/qualified/${params.applicant}`);
+				}
+			}
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
 	}
 };

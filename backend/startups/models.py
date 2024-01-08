@@ -79,7 +79,7 @@ class ReadinessLevelCriterionAnswer(BaseModel):
     startup = models.ForeignKey(
         Startup,
         on_delete=models.CASCADE,
-        related_name="readiness_evel_criterion_answers",
+        related_name="readiness_level_criterion_answers",
     )
     criterion = models.ForeignKey(
         readinesslevel_models.LevelCriterion,

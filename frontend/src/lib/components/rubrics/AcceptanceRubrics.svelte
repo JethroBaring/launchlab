@@ -3,9 +3,10 @@
 </script>
 <div class="flex flex-col gap-5" class:hidden={currentTab !== "Acceptance"}>
 
-{#each questions as question}
+{#each questions as question, i}
     
-<div>
+<div class="flex gap-3">
+	<input type="radio" name="acceptanceReadinessLevel" class="radio" value={question.id} checked={i === 0}>
 	<p>Level {question.level}: {question.name}</p>
 </div>
 <div class="rounded-lg p-5 bg-slate-50">

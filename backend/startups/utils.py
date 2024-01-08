@@ -37,27 +37,31 @@ def calculate_levels(startup_id):
 
     technology_level = 1
     commercialization_level = 1
-    tech = dev = def_val = comp = team = market = chain = 1
+    tech = dev = def_val = comp = team = market = chain = 0
 
     for answer in calculator_answers:
         question = answer.calculator_question
-        category = question.category.category.lower()
-
+        category = answer.calculator_question.category.category.lower()
+        print(question.score)
         if category == "technology":
-            tech += answer.score
-        elif category == "development":
-            dev += answer.score
-        elif category == "defense":
-            def_val += answer.score
-        elif category == "competition":
-            comp += answer.score
+            tech = question.score
+        elif category == "product development":
+            dev = question.score
+        elif category == "product definition/design":
+            def_val = question.score
+        elif category == "competitive landscape":
+            comp = question.score
         elif category == "team":
-            team += answer.score
-        elif category == "market":
-            market += answer.score
-        elif category == "supply chain":
-            chain += answer.score
+            team = question.score
+        elif category == "go-to-market":
+            market = question.score
+        elif category == "manufacturing/supply chain":
+            chain = question.score
 
+    if tech >= 4:
+        technology_level = 4
+    if tech >= 5:
+        technology_level = 5
     if dev >= 2 and def_val >= 3:
         technology_level = 6
     if dev >= 3:
@@ -67,11 +71,26 @@ def calculate_levels(startup_id):
     if dev >= 5:
         technology_level = 9
 
-    if comp == 1 and team == 1:
+    if comp >= 1 and team >= 1:
         commercialization_level = 1
-    elif comp == 2 and team == 2:
+    if comp >= 2 and team == 2:
         commercialization_level = 2
-
+    if dev >= 1 and def_val >= 1 and comp >= 3 and team >= 2 and market >= 1:
+        commercialization_level = 3
+    if def_val >= 2 and comp >= 4 and team >= 2 and market >= 2 and chain >= 1:
+        commercialization_level = 4
+    if def_val >= 4 and comp >= 5 and team >= 3 and market >= 3 and chain >= 2:
+        commercialization_level = 5
+    if def_val >= 5 and team >= 4 and market >= 4:
+        commercialization_level = 6
+    if team >= 4 and chain >= 3:
+        commercialization_level = 7
+    if team >= 5 and chain >= 4:
+        commercialization_level = 8
+    if team >= 5 and chain >= 5:
+        commercialization_level = 9
+    
+    
     return (
         technology_level,
         commercialization_level,

@@ -3,10 +3,12 @@
 </script>
 <div class="flex flex-col gap-5" class:hidden={currentTab !== "Market"}>
 
-{#each questions as question}
+{#each questions as question, i}
     
-<p>Level {question.level}: {question.name}</p>
-<div class="rounded-lg p-5 bg-slate-50">
+<div class="flex gap-3">
+	<input type="radio" name="marketReadinessLevel" class="radio" value={question.id} checked={i === 0}>
+	<p>Level {question.level}: {question.name}</p>
+</div><div class="rounded-lg p-5 bg-slate-50">
    
 	<table class="table">
 		<thead>

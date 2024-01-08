@@ -6,7 +6,7 @@
 	import ApplicantTechnologyCalculator from '$lib/components/applicant/ApplicantTechnologyCalculator.svelte';
 	import AssignMentor from '$lib/components/shared/AssignMentor.svelte';
 	export let data;
-	console.log(data.mentors)
+	console.log(data.calculator)
 	let selectedMentor = data.mentors[0].id
 	const handleMentor = (mentor: number) => {
 		selectedMentor = mentor
@@ -31,7 +31,7 @@
 					<div class="divider" />
 					<ApplicantGroupInformation groupName={data.info.group_name} leaderName={data.info.member_1_name} leaderEmail={data.info.member_1_email} leaderNumber={data.info.member_1_number} members={data.info.members} university={data.info.university_name}/>
 					<div class="divider" />
-					<ApplicantTechnologyCalculator />
+					<ApplicantTechnologyCalculator calculator={data.calculator}/>
 					<div class="divider" />
 					<ApplicantReadinessLevel readiness={data.answers}/>
 					<div class="divider"/>

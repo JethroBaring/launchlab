@@ -1,15 +1,11 @@
 <script lang="ts">
 	import Icon from "../icons/icon.svelte";
 
-    export let questions: any, currentTab: string, scores: any, access: string, startupId: number
+    export let questions: any, currentTab: string, scores: any, access: string, startupId: number, readiness_level: any
 
 	const updateScore = async (
 		id: number,
-		newScore: number,
-		// startupId: number,
-		// urat_question_id: number,
-		// answers: string,
-		// readiness_type: string
+		newScore: number
 	) => {
 		try {
 			const d = await fetch(`http://127.0.0.1:8000/readiness-level-criterion-answers/${id}/`, {
@@ -68,15 +64,41 @@
 			console.log(error)
 		}
 	};
+
+	const updateLevel = async (
+		id: number,
+		readiness_level: number
+	) => {
+		try {
+			const d = await fetch(`http://127.0.0.1:8000/startup-readiness-levels/${id}/`, {
+			method: 'PATCH',
+			headers: {
+				'Content-type': 'application/json',
+				Authorization: `Bearer ${access}`
+			},
+			body: JSON.stringify({
+				startup_id: startupId,
+				readiness_level_id: readiness_level
+			})
+		});
+
+		if (d.ok) {
+			console.log('ok');
+		}
+		} catch (error) {
+			console.log(error)
+		}
+	};
 </script>
 <div class="flex flex-col gap-5" class:hidden={currentTab !== "Technology"}>
 
 {#each questions as question, index}
     
 <div class="flex gap-3">
-	<input type="radio" name="technologyReadinessLevel" class="radio">
+	<input type="radio" name="technologyReadinessLevel" class="radio" checked={readiness_level.readiness_level === index+1} on:click={() => updateLevel(readiness_level.id, question.id)}>
 	<p>Level {question.level}: {question.name}</p>
-</div><div class="rounded-lg p-5 bg-slate-50">
+</div>
+<div class="rounded-lg p-5 bg-slate-50">
    
 	<table class="table">
 		<thead>

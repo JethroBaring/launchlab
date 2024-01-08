@@ -34,7 +34,7 @@
 					<div class="divider" />
 
 					{#if data.scores.length != 0}
-						<QualifiedReadinessLevelUpdate questions={data.questions} id={data.info.id} user={'admin'} scores={data.scores} access={data.access}/>
+						<QualifiedReadinessLevelUpdate questions={data.questions} id={data.info.id} user={'admin'} scores={data.scores} access={data.access} readiness={data.readiness}/>
 					{:else}
 						<QualifiedReadinessLevel questions={data.questions} id={data.info.id} user={'admin'} />
 					{/if}

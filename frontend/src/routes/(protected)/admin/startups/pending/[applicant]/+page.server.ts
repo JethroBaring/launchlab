@@ -33,12 +33,25 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 
 		const answers_data = await urat_answers.json();
 
-		if (urat_questions.ok && urat_answers.ok) {
+		const calculator = await fetch(
+			`http://127.0.0.1:8000/startups/${params.applicant}/calculator-final-scores/`,
+			{
+				method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
+
+		const calculator_data = await calculator.json();
+
+		if (urat_questions.ok && urat_answers.ok && calculator.ok) {
 			return {
 				info: data,
 				questions: questions_data.results,
 				answers: answers_data.results,
-				access: cookies.get('Access')
+				access: cookies.get('Access'),
+				calculator: calculator_data
 			};
 		}
 	}
@@ -60,7 +73,26 @@ export const actions = {
 		);
 
 		if (response.ok) {
-			throw redirect(302, `/admin/startups/rated/${params.applicant}`);
+			const checkScores = await fetch(
+				`http://127.0.0.1:8000/startups/${params.applicant}/calculator-final-scores/`,
+				{
+					method: 'get',
+					headers: {
+						'Content-type': 'application/json',
+						Authorization: `Bearer ${cookies.get('Access')}`
+					}
+				}
+			);
+
+			const data = await checkScores.json();
+
+			if (checkScores.ok) {
+				if (data.technology_level >= 4) {
+					throw redirect(302, `/admin/startups/rated/${params.applicant}`);
+				} else {
+					throw redirect(302, `/admin/startups/rated/`);
+				}
+			}
 		}
 	}
 };
