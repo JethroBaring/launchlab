@@ -383,7 +383,17 @@ class StartupViewSet(
 
         return Response(
             startups_serializers.response.CalculatorFinalScoresResponseSerializer(
-                calculator_values
+                {
+                    "technology_level": calculator_values[0],
+                    "commercialization_level": calculator_values[1],
+                    "technology_score": calculator_values[2],
+                    "product_development": calculator_values[3],
+                    "product_definition": calculator_values[4],
+                    "competitive_landscape": calculator_values[5],
+                    "team": calculator_values[6],
+                    "go_to_market": calculator_values[7],
+                    "supply_chain": calculator_values[8]
+                }
             ).data
         )
 
@@ -476,11 +486,24 @@ class UratQuestionAnswerViewSet(
         },
     )
     def partial_update(self, request, *args, **kwargs):
-        """Partial Update URAT Question Answer
+        urat_question_answer = self.get_object()
 
-        Updates a URAT Question Answer field/s.
-        """
-        return super().partial_update(request, *args, **kwargs)
+        request_serializer = (
+            startups_serializers.request.UpdateUratQuestionAnswerRequestSerializer(
+                data=request.data
+            )
+        )
+        request_serializer.is_valid(raise_exception=True)
+
+        score = request_serializer.validated_data.get("score")
+
+        urat_question_answer.score = score
+        urat_question_answer.save(update_fields=["score"])
+
+        return Response(
+            self.serializer_class(urat_question_answer).data, status=status.HTTP_200_OK
+        )
+
 
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
@@ -694,7 +717,7 @@ class StartupReadinessLevelViewSet(
 
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
-        pass
+        return super().update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
         """Update Startup Readiness Level

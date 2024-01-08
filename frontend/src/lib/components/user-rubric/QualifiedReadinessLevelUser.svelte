@@ -21,7 +21,7 @@
 	};
 </script>
 
-<div class="tabs">
+<div class="tabs mb-5">
 	<a
 		class="tab tab-bordered"
 		class:tab-active={currentTab === 'overview'}
@@ -34,7 +34,7 @@
 	>
 </div>
 {#if currentTab === 'detailed'}
-	<div class="flex w-full h-10 bg-slate-50">
+	<div class="flex w-full h-10 bg-slate-50 mb-5">
 		<button
 			class="flex-1 flex justify-center items-center"
 			on:click={() => handleType('Technology')}

@@ -45,18 +45,27 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 				}
 			}
 		);
+		
+		const mentor = await fetch(`http://127.0.0.1:8000/startups/${params.applicant}/mentors/`, {
+			method: 'get',
+			headers: {
+				Authorization: `Bearer ${cookies.get('Access')}`
+			}
+		})
 
 		const rubrics_data = await rubrics.json();
 		const rubrics2_data = await rubrics2.json();
 		const scores_data = await haveScores.json();
 		const readiness_data = await readiness_level.json()
+		const m_data = await mentor.json()
 		if (rubrics.ok && rubrics2.ok && haveScores.ok && readiness_level.ok) {
 			return {
 				info: data,
 				questions: rubrics_data.results.concat(rubrics2_data.results),
 				access: cookies.get('Access'),
 				scores: scores_data.results,
-				readiness: readiness_data.results
+				readiness: readiness_data.results,
+				mentor: m_data
 			};
 		}
 	}

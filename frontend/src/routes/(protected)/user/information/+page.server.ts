@@ -11,8 +11,19 @@ export const load: PageServerLoad =async ({cookies, fetch}) => {
 
     const data = await response.json()
     if(response.ok) {
-        return {
-            info: data.results[0]
+        const mentor = await fetch(`http://127.0.0.1:8000/startups/${data.results[0].id}/mentors/`, {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer ${cookies.get('Access')}`
+            }
+        })
+
+        const m = await mentor.json()
+        if(mentor.ok) {
+            return {
+                info: data.results[0],
+                mentor: m
+            }
         }
     }
 

@@ -58,7 +58,10 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 
 
 export const actions = {
-	approve: async ({ cookies, params }) => {
+	approve: async ({ cookies, params, request }) => {
+		const formData = await request.formData()
+		const mentorId = parseInt(formData.get('selectedMentor') as string)
+		
 		const response = await fetch(
 			`http://127.0.0.1:8000/startups/${params.applicant}/approve-applicant/`,
 			{
@@ -70,7 +73,22 @@ export const actions = {
 			}
 		);
 		if (response.ok) {
-			throw redirect(302, `/admin/startups/qualified/${params.applicant}`);
+			const assignmentor = await fetch(`http://127.0.0.1:8000/startups/${params.applicant}/appoint-mentors/`, {
+				method: 'post',
+				headers: {
+					'Content-type': 'application/json',
+					Authorization: `Bearer ${cookies.get('Access')}`
+				},
+				body: JSON.stringify({
+					mentor_ids: [mentorId]
+				})
+			})
+
+			if(assignmentor.ok) {
+				throw redirect(302, `/admin/startups/qualified/${params.applicant}`);
+
+			}
+
 		} else {
 			console.log(response.statusText);
 			throw redirect(302, `/admin/startups/pending/${params.applicant}`);

@@ -11,10 +11,6 @@
 	const updateScore = async (
 		id: number,
 		newScore: number,
-		// startupId: number,
-		// urat_question_id: number,
-		// answers: string,
-		// readiness_type: string
 	) => {
 		try {
 			const d = await fetch(`http://127.0.0.1:8000/urat-question-answers/${id}/`, {

@@ -42,6 +42,7 @@
 								<button class="btn bg-red-500 hover:bg-red-600 btn-custom text-white normal-case">Reject</button>
 							</form>
 							<form action={`/admin/startups/rated/${data.info.id}?/approve`} method="post">
+								<input type="hidden" name="selectedMentor" value={selectedMentor}>
 								<button class="btn bg-green-500 hover:bg-green-600 btn-custom text-white normal-case">Approve</button>
 							</form>
 						</div>

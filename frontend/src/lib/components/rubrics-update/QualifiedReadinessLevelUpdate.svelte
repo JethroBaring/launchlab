@@ -22,7 +22,6 @@
 		currentType = type;
 	};
 
-	console.log(readiness.filter((r) => r.readiness_type === 'Technology')[0].readiness_level);
 </script>
 
 <div class="collapse">

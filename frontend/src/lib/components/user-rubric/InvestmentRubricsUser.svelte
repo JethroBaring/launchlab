@@ -6,7 +6,7 @@
 {#each questions as question, index}
     
 <div class="flex gap-3">
-	<input type="radio" name="investmentReadinessLevel" class="radio" checked={readiness_level.readiness_level === index+1}>
+	<input type="radio" name="investmentReadinessLevel" class="radio pointer-events-none" checked={readiness_level.readiness_level === index+1}>
 	<p>Level {question.level}: {question.name}</p>
 </div><div class="rounded-lg p-5 bg-slate-50">
    

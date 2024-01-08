@@ -4,7 +4,10 @@
 	import ApplicantGroupInformation from '$lib/components/applicant/ApplicantGroupInformation.svelte';
 	import { QualifiedReadinessLevel } from '$lib/components/rubrics';
 	import QualifiedReadinessLevelUpdate from '$lib/components/rubrics-update/QualifiedReadinessLevelUpdate.svelte';
+	import ApplicantMentor from '$lib/components/applicant/ApplicantMentor.svelte';
+	import QualifiedReadinessLevelUser from '$lib/components/user-rubric/QualifiedReadinessLevelUser.svelte';
 	export let data;
+	console.log(data.mentor)
 </script>
 
 <div class="flex flex-1 flex-col">
@@ -23,6 +26,8 @@
 						capsuleProposal={data.info.capsule_proposal}
 					/>
 					<div class="divider" />
+					<ApplicantMentor mentor={data.mentor[0]}/>
+					<div class="divider" />
 					<ApplicantGroupInformation
 						groupName={data.info.group_name}
 						leaderName={data.info.member_1_name}
@@ -33,11 +38,7 @@
 					/>
 					<div class="divider" />
 
-					{#if data.scores.length != 0}
-						<QualifiedReadinessLevelUpdate questions={data.questions} id={data.info.id} user={'admin'} scores={data.scores} access={data.access} readiness={data.readiness}/>
-					{:else}
-						<QualifiedReadinessLevel questions={data.questions} id={data.info.id} user={'admin'} />
-					{/if}
+					<QualifiedReadinessLevelUser questions={data.questions} scores={data.scores} readiness={data.readiness}/>
 				</div>
 			</div>
 		</div>

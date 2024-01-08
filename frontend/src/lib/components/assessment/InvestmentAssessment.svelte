@@ -17,7 +17,7 @@
 		readiness_type: string
 	) => {
 		const d = await fetch(`http://127.0.0.1:8000/urat-question-answers/${id}/`, {
-			method: 'put',
+			method: 'PATCH',
 			headers: {
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${access}`

@@ -33,15 +33,28 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 			}
 		})
 
+		const readiness_level = await fetch(
+			`http://127.0.0.1:8000/startup-readiness-levels/?startup_id=${params.applicant}`,
+			{
+				method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+			}
+		);
+
 		const rubrics_data = await rubrics.json();
 		const rubrics2_data = await rubrics2.json();
 		const scores_data = await haveScores.json()
-		if (rubrics.ok && rubrics2.ok && haveScores.ok) {
+		const readiness_data = await readiness_level.json()
+
+		if (rubrics.ok && rubrics2.ok && haveScores.ok && readiness_level.ok) {
 			return {
 				info: data,
 				questions: rubrics_data.results.concat(rubrics2_data.results),
 				access: cookies.get('Access'),
-				scores: scores_data.results
+				scores: scores_data.results,
+				readiness: readiness_data.results
 			};
 		}
 	}
@@ -63,9 +76,14 @@ export const actions = {
 
 		const answers: {startup_id: number, criterion_id: number, score: number, remark: string}[] = [] 
 
-		
+		const readinesslevels: { startup_id: number; readiness_level_id: number }[] = [];
+
 
 		types.forEach((type) => {
+			readinesslevels.push({
+				startup_id: Number.parseInt(params.applicant as string),
+				readiness_level_id: parseInt(formData.get(`${type}ReadinessLevel`) as string)
+			});
 			for (let level = 1; level <= 9; level++) {
 				for (let criteria = 1; criteria <= 6; criteria++) {
 					answers.push({
@@ -92,7 +110,20 @@ export const actions = {
 		})
 
 		if(rubrics_scores.ok) {
-			throw redirect(302, `/mentor/startups/qualified/${params.applicant}`)
+			const levels = await fetch('http://127.0.0.1:8000/startup-readiness-levels/bulk-create/', {
+					method: 'post',
+					headers: {
+						'Content-type': 'application/json',
+						Authorization: `Bearer ${cookies.get('Access')}`
+					},
+					body: JSON.stringify({
+						startup_readiness_levels: readinesslevels
+					})
+				});
+
+			if(levels.ok) {
+				throw redirect(302, `/mentor/startups/qualified/${params.applicant}`)
+			}
 		}
 		} catch (error) {
 			console.log(error)
