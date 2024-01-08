@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from users import serializers as users_serializers
 
 
 class CalculatorFinalScoresResponseSerializer(serializers.Serializer):
@@ -11,3 +12,9 @@ class CalculatorFinalScoresResponseSerializer(serializers.Serializer):
     team = serializers.IntegerField()
     go_to_market = serializers.IntegerField()
     supply_chain = serializers.IntegerField()
+
+
+class GetMentorsResponseSerializer(users_serializers.base.UserBaseSerializer):
+    class Meta:
+        model = users_serializers.base.UserBaseSerializer.Meta.model
+        fields = ["id", "first_name", "last_name", "email"]

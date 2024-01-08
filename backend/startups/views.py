@@ -42,7 +42,7 @@ class StartupViewSet(
         ]:
             return [users_permissions.IsManagerPermission()]
 
-        if viewset_action == "retrieve":
+        if viewset_action in ["retrieve", "get_mentors"]:
             return [startups_permissions.IsManagerOrMemberOrMentorOfStartUpPermission()]
 
         return super().get_permissions()
@@ -387,6 +387,29 @@ class StartupViewSet(
             )
         )
 
+    @swagger_auto_schema(
+        query_serializer=None,
+        responses={
+            200: startups_serializers.response.GetMentorsResponseSerializer(many=True),
+            403: startups_permissions.IsManagerOrMemberOrMentorOfStartUpPermission.message,
+        },
+    )
+    @action(url_path="mentors", detail=True, methods=["GET"])
+    def get_mentors(self, request, pk):
+        """Get Mentors
+
+        Gets the mentors of the startup.
+        """
+        startup = self.get_object()
+
+        mentors = startup.mentors.all()
+
+        return Response(
+            startups_serializers.response.GetMentorsResponseSerializer(
+                mentors, many=True
+            )
+        )
+
 
 class UratQuestionAnswerViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet, mixins.UpdateModelMixin
@@ -422,6 +445,10 @@ class UratQuestionAnswerViewSet(
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(auto_schema=None)
+    def update(self, request, *args, **kwargs):
+        pass
 
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
@@ -572,6 +599,10 @@ class StartupReadinessLevelViewSet(
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
+
+    @swagger_auto_schema(auto_schema=None)
+    def update(self, request, *args, **kwargs):
+        pass
 
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
