@@ -1,10 +1,13 @@
-from startups import models as startups_models
-from startups import serializers as startups_serializers
+from rest_framework import serializers
 
 
-# class StartupResponseSerializer(startups_serializers.base.StartupBaseSerializer):
-# readiness_levels = startups_serializers.base.ReadinessLevelBaseSerializer(many=True)
-
-# class Meta:
-#     model = startups_models.Startup
-#     fields = ["name", "user_id", "applicant_id", "readiness_levels"]
+class CalculatorFinalScoresResponseSerializer(serializers.Serializer):
+    technology_level = serializers.IntegerField()
+    commercialization_level = serializers.IntegerField()
+    technology_score = serializers.IntegerField()
+    product_development = serializers.IntegerField()
+    product_definition = serializers.IntegerField()
+    competitive_landscape = serializers.IntegerField()
+    team = serializers.IntegerField()
+    go_to_market = serializers.IntegerField()
+    supply_chain = serializers.IntegerField()

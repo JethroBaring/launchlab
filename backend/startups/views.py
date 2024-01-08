@@ -11,6 +11,10 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone
 from django.db.models import Q, Sum, Subquery, OuterRef
 from startups import utils as startups_utils
+from drf_yasg import openapi
+from users import permissions as users_permissions
+from startups import permissions as startups_permissions
+
 
 class StartupViewSet(
     mixins.RetrieveModelMixin,
@@ -26,6 +30,20 @@ class StartupViewSet(
 
         if viewset_action == "create":
             return []
+
+        if viewset_action in [
+            "approve_applicant",
+            "rate_applicant",
+            "reject_applicant",
+            "appoint_mentors",
+            "ranking_by_urat",
+            "ranking_by_rubrics",
+            "calculator_final_scores",
+        ]:
+            return [users_permissions.IsManagerPermission()]
+
+        if viewset_action == "retrieve":
+            return [startups_permissions.IsManagerOrMemberOrMentorOfStartUpPermission()]
 
         return super().get_permissions()
 
@@ -52,10 +70,12 @@ class StartupViewSet(
         ):
             queryset = queryset.filter(Q(user_id=user.id) | Q(members__user_id=user.id))
 
-        if not user.is_anonymous and user.user_type == users_models.BaseUser.UserType.MENTOR:
-            # Filter startups associated with the mentor
-            queryset = queryset.filter(mentors=user)
-        
+        if (
+            not user.is_anonymous
+            and user.user_type == users_models.BaseUser.UserType.MENTOR
+        ):
+            queryset = queryset.filter(mentors__id=user.id)
+
         return queryset.filter(datetime_deleted__isnull=True).all()
 
     @swagger_auto_schema(
@@ -63,6 +83,10 @@ class StartupViewSet(
         responses={200: startups_serializers.base.StartupBaseSerializer},
     )
     def create(self, request):
+        """Create Startup
+
+        Creates a new Startup Instance with its members.
+        """
         serializer = startups_serializers.request.StartupRequestSerializer(
             data=request.data
         )
@@ -80,13 +104,20 @@ class StartupViewSet(
         return Response(self.serializer_class(startup).data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        request_body=openapi.Schema(type=openapi.TYPE_OBJECT, properties={}),
         responses={
             200: "sent email successfully",
+            403: users_permissions.IsManagerPermission.message,
         },
     )
     @transaction.atomic
     @action(url_path="approve-applicant", detail=True, methods=["POST"])
     def approve_applicant(self, request, pk):
+        """Approve Applicant
+
+        Updates the startup qualifacation status to qualified.
+        And send approval emails to leader and members.
+        """
         startup = self.get_object()
 
         member_1_email = startup.member_1_email
@@ -107,13 +138,20 @@ class StartupViewSet(
         return Response("sent email successfully", status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
+        request_body=openapi.Schema(type=openapi.TYPE_OBJECT, properties={}),
         responses={
             200: "sent email successfully",
+            403: users_permissions.IsManagerPermission.message,
         },
     )
     @transaction.atomic
     @action(url_path="reject-applicant", detail=True, methods=["POST"])
     def reject_applicant(self, request, pk):
+        """Reject Applicant
+
+        Soft delete startup and
+        send rejection email to leader.
+        """
         startup = self.get_object()
         startup.datetime_deleted = timezone.now()
         startup.save(update_fields=["datetime_deleted"])
@@ -124,22 +162,24 @@ class StartupViewSet(
         return Response("sent email successfully", status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        query_serializer=startups_serializers.query.StartupQuerySerializer(),
+        request_body=openapi.Schema(type=openapi.TYPE_OBJECT, properties={}),
         responses={
-            200: startups_serializers.base.StartupBaseSerializer(many=True),
+            200: "startup rated successfully",
+            403: users_permissions.IsManagerPermission.message,
         },
     )
     @transaction.atomic
     @action(url_path="rate-applicant", detail=True, methods=["POST"])
     def rate_applicant(self, request, pk):
+        """Rate Applicant
+
+        Updates the startup qualifacation status to rated.
+        """
         startup = self.get_object()
         startup.qualification_status = 2
         startup.save(update_fields=["qualification_status"])
 
         return Response("startup rated successfully", status=status.HTTP_200_OK)
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
         query_serializer=startups_serializers.query.StartupQuerySerializer(),
@@ -147,34 +187,40 @@ class StartupViewSet(
             200: startups_serializers.base.StartupBaseSerializer(),
         },
     )
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        """List Startups
 
-    def partial_update(self, request, *args, **kwargs):
-        startup = self.get_object()
-
-        request_serializer = (
-            startups_serializers.request.UpdateStartupRequestSerializer(
-                data=request.data
-            )
-        )
-        request_serializer.is_valid(raise_exception=True)
-
-        qualification_status = request_serializer.validated_data.get(
-            "qualification_status"
-        )
-
-        startup.qualification_status = qualification_status
-        startup.save(update_fields=["qualification_status"])
-
-        return Response(self.serializer_class(startup).data, status=status.HTTP_200_OK)
+        lists startups objects with different filters.
+        """
+        return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        request_body=startups_serializers.request.AssignMentorsRequestSerializer,
-        responses={204: ""},
+        query_serializer=startups_serializers.query.StartupQuerySerializer(),
+        responses={
+            200: startups_serializers.base.StartupBaseSerializer(),
+            403: startups_permissions.IsManagerOrMemberOrMentorOfStartUpPermission.message,
+        },
+    )
+    def retrieve(self, request, *args, **kwargs):
+        """Retrieve Startup
+
+        Retrieves a startup given the id in path.
+        """
+        return super().retrieve(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        request_body=startups_serializers.request.AssignMentorsRequestSerializer(),
+        responses={
+            204: "",
+            403: users_permissions.IsManagerPermission.message,
+        },
     )
     @action(url_path="appoint-mentors", detail=True, methods=["POST"])
     def appoint_mentors(self, request, pk):
+        """Appoint Mentors
+
+        Set mentor/s to the the specified startup.
+        """
         startup = self.get_object()
 
         request_seralizer = startups_serializers.request.AssignMentorsRequestSerializer(
@@ -188,8 +234,19 @@ class StartupViewSet(
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @swagger_auto_schema(
+        query_serializer=None,
+        responses={
+            200: startups_serializers.base.StartupBaseSerializer(many=True),
+            403: users_permissions.IsManagerPermission.message,
+        },
+    )
     @action(url_path="ranking-by-urat", detail=False, methods=["GET"])
     def ranking_by_urat(self, request):
+        """Ranking By URAT
+
+        Ranking startups based on their URAT scores.
+        """
         urat_rankings = startups_models.URATQuestionAnswer.objects.values(
             "startup"
         ).annotate(urat_score=Sum("score"))
@@ -228,8 +285,19 @@ class StartupViewSet(
             ).data
         )
 
+    @swagger_auto_schema(
+        query_serializer=None,
+        responses={
+            200: startups_serializers.base.StartupBaseSerializer(many=True),
+            403: users_permissions.IsManagerPermission.message,
+        },
+    )
     @action(url_path="ranking-by-rubrics", detail=False, methods=["GET"])
     def ranking_by_rubrics(self, request):
+        """Ranking By Rubrics
+
+        Ranking startups based on their rubrics scores.
+        """
         readiness_type_weights = {
             "T": 4,
             "M": 3,
@@ -296,22 +364,29 @@ class StartupViewSet(
             ).data
         )
 
+    @swagger_auto_schema(
+        query_serializer=None,
+        responses={
+            200: startups_serializers.response.CalculatorFinalScoresResponseSerializer,
+            403: users_permissions.IsManagerPermission.message,
+        },
+    )
     @action(url_path="calculator-final-scores", detail=True, methods=["GET"])
     def calculator_final_scores(self, request, pk):
-        startup = self.get_object()
+        """Calculator Final Scores
+
+        Gets the scores using the
+        NYSERDA Technology and Commercialization Readiness Level
+        Calculator.
+        """
         calculator_values = startups_utils.calculate_levels(pk)
 
-        return Response({
-            "technology_level": calculator_values[0],
-            "commercialization_level": calculator_values[1],
-            "technology_score": calculator_values[2],
-            "product_development": calculator_values[3],
-            "product_definition": calculator_values[4],
-            "competitive_landscape": calculator_values[5],
-            "team": calculator_values[6],
-            "go_to_market": calculator_values[7],
-            "supply_chain": calculator_values[8]
-        })
+        return Response(
+            startups_serializers.response.CalculatorFinalScoresResponseSerializer(
+                calculator_values
+            )
+        )
+
 
 class UratQuestionAnswerViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin, BaseViewSet, mixins.UpdateModelMixin
@@ -322,11 +397,11 @@ class UratQuestionAnswerViewSet(
     def get_permissions(self):
         viewset_action = self.action
 
-        if viewset_action in ["create","bulk_create"]:
+        if viewset_action in ["create", "bulk_create"]:
             return []
 
         return super().get_permissions()
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         request = self.request
@@ -369,16 +444,10 @@ class UratQuestionAnswerViewSet(
             "urat_question_answers"
         )
 
-        urat_question_answers_object = []
-        for urat_question_answer in urat_question_answers:
-            startup = urat_question_answer.get("startup")
-
-            # if not (startup.user.id == request.user.id):
-            #     continue
-
-            urat_question_answers_object.append(
-                startups_models.URATQuestionAnswer(**urat_question_answer)
-            )
+        urat_question_answers_object = [
+            startups_models.URATQuestionAnswer(**urat_question_answer)
+            for urat_question_answer in urat_question_answers
+        ]
 
         startups_models.URATQuestionAnswer.objects.bulk_create(
             urat_question_answers_object
@@ -434,16 +503,10 @@ class ReadinessLevelCriterionAnswerViewSet(
 
         criterion_answers = request_serializer.validated_data.get("criterion_answers")
 
-        criterion_answers_object = []
-        for criterion_answer in criterion_answers:
-            startup = criterion_answer.get("startup")
-
-            # if not (startup.user.id == request.user.id):
-            #     continue
-
-            criterion_answers_object.append(
-                startups_models.ReadinessLevelCriterionAnswer(**criterion_answer)
-            )
+        criterion_answers_object = [
+            startups_models.ReadinessLevelCriterionAnswer(**criterion_answer)
+            for criterion_answer in criterion_answers
+        ]
 
         startups_models.ReadinessLevelCriterionAnswer.objects.bulk_create(
             criterion_answers_object
@@ -478,18 +541,22 @@ class ReadinessLevelCriterionAnswerViewSet(
         )
 
 
-class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet, mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin):
+class StartupReadinessLevelViewSet(
+    mixins.CreateModelMixin,
+    BaseViewSet,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+):
     queryset = startups_models.StartupReadinessLevel.objects
     serializer_class = startups_serializers.base.StartupReadinessLevelBaseSerializer
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         request = self.request
 
-        serializer = (
-            startups_serializers.query.StartupReadinessLevelQuerySerializer(
-                data=request.query_params
-            )
+        serializer = startups_serializers.query.StartupReadinessLevelQuerySerializer(
+            data=request.query_params
         )
 
         serializer.is_valid(raise_exception=True)
@@ -498,18 +565,17 @@ class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet, mixins.
         if startup_id:
             queryset = queryset.filter(startup_id=startup_id)
 
-
         return queryset.all()
-    
+
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    
+
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
-    
+
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-    
+
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
@@ -529,22 +595,17 @@ class StartupReadinessLevelViewSet(mixins.CreateModelMixin, BaseViewSet, mixins.
             "startup_readiness_levels"
         )
 
-        startup_readiness_levels_object = []
-        for startup_readiness_level in startup_readiness_levels:
-            startup = startup_readiness_level.get("startup")
-
-            # if not (startup.user.id == request.user.id):
-            #     continue
-
-            startup_readiness_levels_object.append(
-                startups_models.StartupReadinessLevel(**startup_readiness_level)
-            )
+        startup_readiness_levels_object = [
+            startups_models.StartupReadinessLevel(**startup_readiness_level)
+            for startup_readiness_level in startup_readiness_levels
+        ]
 
         startups_models.StartupReadinessLevel.objects.bulk_create(
             startup_readiness_levels_object
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class CalculatorQuestionAnswerViewSet(BaseViewSet):
     queryset = startups_models.CalculatorQuestionAnswer.objects
@@ -557,7 +618,7 @@ class CalculatorQuestionAnswerViewSet(BaseViewSet):
             return []
 
         return super().get_permissions()
-    
+
     @swagger_auto_schema(
         request_body=startups_serializers.request.BulkCreateCalculatorQuestionAnswerRequestSerializer,
         responses={204: ""},
@@ -574,16 +635,10 @@ class CalculatorQuestionAnswerViewSet(BaseViewSet):
             "calculator_question_answers"
         )
 
-        calculator_question_answers_object = []
-        for calculator_question_answer in calculator_question_answers:
-            startup = calculator_question_answer.get("startup")
-
-            # if not (startup.user.id == request.user.id):
-            #     continue
-
-            calculator_question_answers_object.append(
-                startups_models.CalculatorQuestionAnswer(**calculator_question_answer)
-            )
+        calculator_question_answers_object = [
+            startups_models.CalculatorQuestionAnswer(**calculator_question_answer)
+            for calculator_question_answer in calculator_question_answers
+        ]
 
         startups_models.CalculatorQuestionAnswer.objects.bulk_create(
             calculator_question_answers_object

@@ -28,12 +28,6 @@ class StartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
         ]
 
 
-class UpdateStartupRequestSerializer(startups_base_serializers.StartupBaseSerializer):
-    class Meta:
-        model = startups_models.Startup
-        fields = ["qualification_status"]
-
-
 class UpdateUratQuestionAnswerRequestSerializer(serializers.Serializer):
     score = serializers.IntegerField()
 
@@ -65,8 +59,7 @@ class AssignMentorsRequestSerializer(serializers.Serializer):
     mentor_ids = serializers.ListField(
         child=(
             serializers.PrimaryKeyRelatedField(queryset=users_models.MentorUser.objects)
-        ),
-        write_only=True,
+        )
     )
 
 
@@ -74,3 +67,17 @@ class BulkCreateCalculatorQuestionAnswerRequestSerializer(serializers.Serializer
     calculator_question_answers = (
         startups_base_serializers.CalculatorQuestionAnswerBaseSerializer(many=True)
     )
+
+
+class ApproveApplicantsWithMentorRequestSerializer(serializers.Serializer):
+    class StartupWithMentorSerializer(serializers.Serializer):
+        startup_id = serializers.IntegerField()
+        mentor_ids = serializers.ListField(
+            child=(
+                serializers.PrimaryKeyRelatedField(
+                    queryset=users_models.MentorUser.objects
+                )
+            )
+        )
+
+    startups_with_mentors = StartupWithMentorSerializer(many=True)
