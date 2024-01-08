@@ -30,6 +30,7 @@
 	};
 
 	export let questions: any
+	console.log(questions.calculator)
 </script>
 
 <form
@@ -48,7 +49,7 @@
 	<Acceptance {currentActive} question={questions.acceptanceQuestions}/>
 	<Organizational {currentActive} question={questions.organizationalQuestions}/>
 	<Investment {currentActive} question={questions.investmentQuestions}/>
-	<TechnologyCalculator {currentActive}/>
+	<TechnologyCalculator {currentActive} calculatorQuestions={questions.calculator}/>
 	<div class="flex gap-3 justify-end">
 		{#if currentActive != 0}
 			<button class="btn btn-custom normal-case w-24" on:click|preventDefault={() => handleStep(-1)}

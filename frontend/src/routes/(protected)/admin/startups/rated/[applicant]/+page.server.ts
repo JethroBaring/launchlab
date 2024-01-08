@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 	if (response.ok) {
 
 		const urat_answers = await fetch(
-			`http://127.0.0.1:8000/urat-question-answer/?startup_id=${data.id}`,
+			`http://127.0.0.1:8000/urat-question-answers/?startup_id=${data.id}`,
 			{
 				method: 'get',
 				headers: {
@@ -24,11 +24,21 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 		);
 
 		const answers_data = await urat_answers.json();
+		
+		const mentor = await fetch('http://127.0.0.1:8000/user/?user_type=ME', {
+			method: 'get',
+				headers: {
+					Authorization: `Bearer ${cookies.get('Access')}`
+				}
+		})
+
+		const mentor_data = await mentor.json()
 
 		if (urat_answers.ok) {
 			return {
 				info: data,
 				answers: answers_data.results,
+				mentors: mentor_data.results
 			};
 		}
 	}

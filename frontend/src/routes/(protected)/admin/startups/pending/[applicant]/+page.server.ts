@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 		const questions_data = await urat_questions.json();
 
 		const urat_answers = await fetch(
-			`http://127.0.0.1:8000/urat-question-answer/?startup_id=${data.id}`,
+			`http://127.0.0.1:8000/urat-question-answers/?startup_id=${data.id}`,
 			{
 				method: 'get',
 				headers: {

@@ -7,7 +7,7 @@
 	<title>Login</title>
 </svelte:head>
 
-<div class="flex-1 flex-col h-full rounded-inherit flex items-center relative">
+<div class="flex-1 flex-col h-full rounded-tl-2xl rounded-bl-2xl bg-slate-100 flex items-center relative">
 	<div class="p-5 flex gap-2 cursor-pointer items-center w-full absolute">
 		<img src="launchlab_logo.png" alt="citeams_logo" class="w-8" />
 		<a href="/" class="cursor-pointer font-black normal-case text-2xl">ChumCheck</a>
@@ -18,10 +18,10 @@
 	</div>
 </div>
 <div class="flex-1 flex flex-col gap-5 items-center justify-between h-full">
-	<div class="flex-1 flex flex-col w-full p-10 justify-center">
+	<div class="flex-1 flex flex-col w-full p-10 justify-center items-center">
 		<h1 class="text-2xl font-semibold mb-5">Login</h1>
-		<form action="?/login" method="post">
-			<div class="form-control w-3/4">
+		<form action="?/login" method="post" class="w-2/3">
+			<div class="form-control w-full">
 				<label class="label" for="">
 					<span class="label-text">Email</span>
 				</label>
@@ -34,7 +34,7 @@
 					value={form?.email ?? ''}
 				/>
 			</div>
-			<div class="form-control w-3/4">
+			<div class="form-control w-full">
 				<label class="label" for="">
 					<span class="label-text">Password</span>
 				</label>
@@ -50,7 +50,7 @@
 				<p>Invalid credentials</p>
 			{/if}
 			<button
-				class="btn mt-8 btn-primary btn-custom border-none normal-case text-white bg-flutter-blue shadow-lg shadow-flutter-blue/50"
+				class="btn w-full mt-8 btn-primary btn-custom border-none normal-case text-white bg-flutter-blue shadow-lg shadow-flutter-blue/50"
 			>
 				Login
 			</button>

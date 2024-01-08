@@ -73,6 +73,14 @@ class CalculatorCategoryViewSet(
     queryset = readinesslevel_models.CalculatorCategory.objects
     serializer_class = readinesslevel_serializers.base.CalculatorCategoryBaseSerializer
 
+    def get_permissions(self):
+        viewset_action = self.action
+
+        if viewset_action in ["list"]:
+            return []
+
+        return super().get_permissions()
+    
     def get_queryset(self):
         queryset = self.queryset
         request = self.request

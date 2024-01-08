@@ -9,7 +9,7 @@ export const load: LayoutServerLoad =async ( {locals}) => {
     if(locals.user.type === 'M') {
         throw redirect(302, '/admin/startups/pending')
     } else if(locals.user.type === "S") {
-        throw redirect(302, '/user/home')
+        throw redirect(302, '/user/readiness-level')
     }
 
     return {

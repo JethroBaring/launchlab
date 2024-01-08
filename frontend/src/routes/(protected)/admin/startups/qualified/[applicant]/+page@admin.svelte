@@ -3,11 +3,9 @@
 	import ApplicantProjectDetails from '$lib/components/applicant/ApplicantProjectDetails.svelte';
 	import ApplicantGroupInformation from '$lib/components/applicant/ApplicantGroupInformation.svelte';
 	import { QualifiedReadinessLevel } from '$lib/components/rubrics';
+	import QualifiedReadinessLevelUpdate from '$lib/components/rubrics-update/QualifiedReadinessLevelUpdate.svelte';
 	export let data;
-	console.log("scores")
-	console.log(data.scores)
 </script>
-
 
 <div class="flex flex-1 flex-col">
 	<div class="flex flex-col flex-1 gap-10">
@@ -20,15 +18,25 @@
 			</div>
 			<div class="flex-1 overflow-scroll">
 				<div class="h-0">
-					<ApplicantProjectDetails name={data.info.name} capsuleProposal={data.info.capsule_proposal}/>
+					<ApplicantProjectDetails
+						name={data.info.name}
+						capsuleProposal={data.info.capsule_proposal}
+					/>
 					<div class="divider" />
-					<ApplicantGroupInformation groupName={data.info.group_name} leaderName={data.info.member_1_name} leaderEmail={data.info.member_1_email} leaderNumber={data.info.member_1_number} members={data.info.members} university={data.info.university_name}/>
+					<ApplicantGroupInformation
+						groupName={data.info.group_name}
+						leaderName={data.info.member_1_name}
+						leaderEmail={data.info.member_1_email}
+						leaderNumber={data.info.member_1_number}
+						members={data.info.members}
+						university={data.info.university_name}
+					/>
 					<div class="divider" />
-					
+
 					{#if data.scores.length != 0}
-						<h1>You already rated this startup, want to edit it?</h1>
+						<QualifiedReadinessLevelUpdate questions={data.questions} id={data.info.id} user={'admin'} scores={data.scores} access={data.access}/>
 					{:else}
-						<QualifiedReadinessLevel questions={data.questions} id={data.info.id} user={"admin"}/>
+						<QualifiedReadinessLevel questions={data.questions} id={data.info.id} user={'admin'} />
 					{/if}
 				</div>
 			</div>

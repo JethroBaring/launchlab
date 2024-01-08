@@ -11,28 +11,28 @@
 	const updateScore = async (
 		id: number,
 		newScore: number,
-		startupId: number,
-		urat_question_id: number,
-		answers: string,
-		readiness_type: string
+		// startupId: number,
+		// urat_question_id: number,
+		// answers: string,
+		// readiness_type: string
 	) => {
-		const d = await fetch(`http://127.0.0.1:8000/urat-question-answer/${id}/`, {
-			method: 'put',
+		try {
+			const d = await fetch(`http://127.0.0.1:8000/urat-question-answers/${id}/`, {
+			method: 'PATCH',
 			headers: {
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${access}`
 			},
 			body: JSON.stringify({
-				startup_id: startupId,
-				urat_question_id: urat_question_id,
-				response: answers,
-				readiness_type: readiness_type,
 				score: newScore
 			})
 		});
 
 		if (d.ok) {
 			console.log('ok');
+		}
+		} catch (error) {
+			console.log(error)
 		}
 	};
 </script>
@@ -77,10 +77,10 @@
 										updateScore(
 											answers[i].id,
 											1,
-											answers[i].startup_id,
-											answers[i].urat_question_id,
-											answers[i].response,
-											answers[i].readiness_type
+											// answers[i].startup_id,
+											// answers[i].urat_question_id,
+											// answers[i].response,
+											// answers[i].readiness_type
 										)}
 								/>
 								<p class="text-xs">1</p>
@@ -95,10 +95,10 @@
 										updateScore(
 											answers[i].id,
 											2,
-											answers[i].startup_id,
-											answers[i].urat_question_id,
-											answers[i].response,
-											answers[i].readiness_type
+											// answers[i].startup_id,
+											// answers[i].urat_question_id,
+											// answers[i].response,
+											// answers[i].readiness_type
 										)}
 								/>
 								<p class="text-xs">2</p>
@@ -113,10 +113,10 @@
 										updateScore(
 											answers[i].id,
 											3,
-											answers[i].startup_id,
-											answers[i].urat_question_id,
-											answers[i].response,
-											answers[i].readiness_type
+											// answers[i].startup_id,
+											// answers[i].urat_question_id,
+											// answers[i].response,
+											// answers[i].readiness_type
 										)}
 								/>
 								<p class="text-xs">3</p>
@@ -131,10 +131,10 @@
 										updateScore(
 											answers[i].id,
 											4,
-											answers[i].startup_id,
-											answers[i].urat_question_id,
-											answers[i].response,
-											answers[i].readiness_type
+											// answers[i].startup_id,
+											// answers[i].urat_question_id,
+											// answers[i].response,
+											// answers[i].readiness_type
 										)}
 								/>
 								<p class="text-xs">4</p>
@@ -149,10 +149,10 @@
 										updateScore(
 											answers[i].id,
 											5,
-											answers[i].startup_id,
-											answers[i].urat_question_id,
-											answers[i].response,
-											answers[i].readiness_type
+											// answers[i].startup_id,
+											// answers[i].urat_question_id,
+											// answers[i].response,
+											// answers[i].readiness_type
 										)}
 								/>
 								<p class="text-xs">5</p>

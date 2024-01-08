@@ -4,18 +4,18 @@
 
 	let count = 0;
 	const x = [
-		{
-			label: 'Team Member 2 (Last Name, First Name)',
-			name: 'member_2_email',
-			placeholder: 'team member 2',
-			required: false
-		},
-		{
-			label: 'Team Member 3 (Last Name, First Name)',
-			name: 'member_3_email',
-			placeholder: 'team member 3',
-			required: false
-		},
+		// {
+		// 	label: 'Team Member 2 (Last Name, First Name)',
+		// 	name: 'member_2_email',
+		// 	placeholder: 'team member 2',
+		// 	required: false
+		// },
+		// {
+		// 	label: 'Team Member 3 (Last Name, First Name)',
+		// 	name: 'member_3_email',
+		// 	placeholder: 'team member 3',
+		// 	required: false
+		// },
 		{
 			label: 'Team Member 4 (Last Name, First Name)',
 			name: 'member_4_email',
@@ -30,8 +30,16 @@
 		}
 	];
 
-	const handleClick = (n: number) => {
-		count += n;
+	const handleClick = (n: number, operation: string) => {
+		if(operation === "add") {
+			if(count + n <= 2) {
+				count += n
+			}
+		} else if(operation === "sub") {
+			if(count - n >= 0) {
+				count -= n
+			}
+		}
 	};
 </script>
 
@@ -51,6 +59,30 @@
 				/>
 			</div>
 		{/each}
+		<div class="form-control">
+			<label class="label" for="member_2_email">
+				<span class="label-text text-base">Team Member 2 (Last Name, First Name)</span>
+			</label>
+			<input
+				type="text"
+				placeholder="team member 2"
+				class="input input-bordered btn-custom"
+				id="member_2_email"
+				name="member_2_email"
+			/>
+		</div>
+		<div class="form-control">
+			<label class="label" for="member_3_email">
+				<span class="label-text text-base">Team Member 3 (Last Name, First Name)</span>
+			</label>
+			<input
+				type="text"
+				placeholder="team member 3"
+				class="input input-bordered btn-custom"
+				id="member_3_email"
+				name="member_3_email"
+			/>
+		</div>
 		{#each x as item, index}
 			{#if index < count}
 				<div class="form-control">
@@ -68,8 +100,8 @@
 			{/if}
 		{/each}
 		<div class="w-full flex justify-end gap-3">
-			<button on:click|preventDefault={() => handleClick(-1)}>Remove member</button>
-			<button on:click|preventDefault={() => handleClick(1)}>Add member</button>
+			<button on:click|preventDefault={() => handleClick(1, "sub")}>Remove member</button>
+			<button on:click|preventDefault={() => handleClick(1, "add")}>Add member</button>
 		</div>
 	</div>
 </div>

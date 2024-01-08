@@ -29,7 +29,7 @@
 			'investment',
 			'calculator'
 		],
-		currentActive = 10;
+		currentActive = 0;
 
 	const handleStep = (stepIncrement: number) => {
 		currentActive += stepIncrement;
@@ -51,14 +51,13 @@
 	];
 
 	export let data
-	console.log(data.technologyQuestions)
 </script>
 
 <svelte:head>
 	<title>Application</title>
 </svelte:head>
 
-<div class="flex-1 flex-col h-full rounded-inherit flex items-center relative">
+<div class="flex-1 flex-col h-full rounded-tl-2xl rounded-bl-2xl flex items-center relative bg-slate-100">
 	<div class="p-5 flex gap-2 cursor-pointer items-center w-full absolute">
 		<img src="launchlab_logo.png" alt="citeams_logo" class="w-8" />
 		<a href="/" class="cursor-pointer font-black normal-case text-2xl">ChumCheck</a>
