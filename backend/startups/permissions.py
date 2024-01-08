@@ -11,7 +11,7 @@ class IsManagerOrMemberOrMentorOfStartUpPermission(IsAuthenticated):
         user_id = user.id
 
         return (
-            obj.user.user_type == users_models.BaseUser.UserType.MANAGER
+            user.user_type == users_models.BaseUser.UserType.MANAGER
             or obj.user_id == user_id
             or obj.members.filter(user_id=user_id).exists()
             or obj.mentors.filter(id=user_id).exists()

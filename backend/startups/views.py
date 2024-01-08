@@ -74,7 +74,7 @@ class StartupViewSet(
             not user.is_anonymous
             and user.user_type == users_models.BaseUser.UserType.MENTOR
         ):
-            queryset = queryset.filter(mentors__id=user.id)
+            queryset = queryset.filter(mentors=user)
 
         return queryset.filter(datetime_deleted__isnull=True).all()
 
@@ -384,7 +384,7 @@ class StartupViewSet(
         return Response(
             startups_serializers.response.CalculatorFinalScoresResponseSerializer(
                 calculator_values
-            )
+            ).data
         )
 
     @swagger_auto_schema(
@@ -407,7 +407,7 @@ class StartupViewSet(
         return Response(
             startups_serializers.response.GetMentorsResponseSerializer(
                 mentors, many=True
-            )
+            ).data
         )
 
 
