@@ -15,6 +15,9 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, BaseViewSet)
         if viewset_action == "list":
             return [users_permissions.IsManagerPermission()]
 
+        if viewset_action == "retrieve":
+            return [users_permissions.IsOwnerOfUserPermission()]
+
         return super().get_permissions()
 
     def get_queryset(self):
@@ -34,7 +37,15 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, BaseViewSet)
         return queryset.all()
 
     def retrieve(self, request, *args, **kwargs):
+        """Retrieve User
+
+        Gets a User Instance.
+        """
         return super().retrieve(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        """List Users
+
+        Gets a collection of Users instances.
+        """
         return super().list(request, *args, **kwargs)

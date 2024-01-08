@@ -423,6 +423,9 @@ class UratQuestionAnswerViewSet(
         if viewset_action in ["create", "bulk_create"]:
             return []
 
+        if viewset_action in ["partial_update", "list"]:
+            return [users_permissions.IsManagerPermission()]
+
         return super().get_permissions()
 
     def get_queryset(self):
@@ -440,18 +443,48 @@ class UratQuestionAnswerViewSet(
 
         return queryset.all()
 
+    @swagger_auto_schema(
+        request_body=startups_serializers.base.UratQuestionAnswerBaseSerializer,
+        responses={204: startups_serializers.base.UratQuestionAnswerBaseSerializer},
+    )
     def create(self, request, *args, **kwargs):
+        """Create URAT Question Answer
+
+        Creates a new URAT Question Answer Instance.
+        """
         return super().create(request, *args, **kwargs)
 
+    @swagger_auto_schema(
+        query_serializer=startups_serializers.query.UratQuestionAnswerQuerySerializer,
+        responses={
+            200: startups_serializers.base.UratQuestionAnswerBaseSerializer,
+            403: users_permissions.IsManagerPermission.message,
+        },
+    )
     def list(self, request, *args, **kwargs):
+        """List URAT Question Answers
+
+        Lists a collection of URAT Question Answers.
+        """
         return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        request_body=startups_serializers.base.UratQuestionAnswerBaseSerializer,
+        responses={
+            200: startups_serializers.base.UratQuestionAnswerBaseSerializer,
+            403: users_permissions.IsManagerPermission.message,
+        },
+    )
+    def partial_update(self, request, *args, **kwargs):
+        """Partial Update URAT Question Answer
+
+        Updates a URAT Question Answer field/s.
+        """
+        return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
         pass
-
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
 
     @swagger_auto_schema(
         request_body=startups_serializers.request.BulkCreateUratQuestionAnswerRequestSerializer,
@@ -459,6 +492,10 @@ class UratQuestionAnswerViewSet(
     )
     @action(url_path="bulk-create", detail=False, methods=["POST"])
     def bulk_create(self, request):
+        """Bulk Create URAT Question Answers
+
+        Creates multiple URAT Question Answer Instances.
+        """
         request_serializer = (
             startups_serializers.request.BulkCreateUratQuestionAnswerRequestSerializer(
                 data=request.data
@@ -491,6 +528,14 @@ class ReadinessLevelCriterionAnswerViewSet(
         startups_serializers.base.ReadinessLevelCriterionAnswerBaseSerializer
     )
 
+    def get_permissions(self):
+        viewset_action = self.action
+
+        if viewset_action == "partial_updated":
+            return [startups_permissions.IsMentorPermission()]
+
+        return super().get_permissions()
+
     def get_queryset(self):
         queryset = super().get_queryset()
         request = self.request
@@ -513,15 +558,31 @@ class ReadinessLevelCriterionAnswerViewSet(
 
         return queryset.all()
 
+    @swagger_auto_schema(
+        request_body=startups_serializers.base.ReadinessLevelCriterionAnswerBaseSerializer,
+        responses={
+            201: startups_serializers.base.ReadinessLevelCriterionAnswerBaseSerializer,
+        },
+    )
     def create(self, request, *args, **kwargs):
+        """Create Readiness Level Criterion Answer
+
+        Creates a new Readiness Level Crtierion Answer instance.
+        """
         return super().create(request, *args, **kwargs)
 
     @swagger_auto_schema(
         request_body=startups_serializers.request.BulkCreateReadinessLevelCriterionAnswerRequestSerializer,
-        responses={204: ""},
+        responses={
+            204: "",
+        },
     )
     @action(url_path="bulk-create", detail=False, methods=["POST"])
     def bulk_create(self, request):
+        """Bulk Create Readiness Level Criterion Answers
+
+        Creates multiple Readiness Level Criterion Answer Instances.
+        """
         request_serializer = startups_serializers.request.BulkCreateReadinessLevelCriterionAnswerRequestSerializer(
             data=request.data
         )
@@ -541,10 +602,33 @@ class ReadinessLevelCriterionAnswerViewSet(
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @swagger_auto_schema(
+        query_serializer=startups_serializers.query.ReadinessLevelCriterionAnswerQuerySerializer,
+        responses={
+            200: startups_serializers.base.ReadinessLevelCriterionAnswerBaseSerializer(
+                many=True
+            )
+        },
+    )
     def list(self, request, *args, **kwargs):
+        """List Readiness Level Criterion Answers
+
+        Gets a collection of Readiness Level Criterion Answer Instances.
+        """
         return super().list(request, *args, **kwargs)
 
+    @swagger_auto_schema(
+        request_body=startups_serializers.request.ReadinessLevelCriterionAnswerRequestSerializer,
+        responses={
+            200: startups_serializers.base.ReadinessLevelCriterionAnswerBaseSerializer(),
+            403: startups_permissions.IsMentorThroughReadinessLevelCriterionAnswerPermission.message,
+        },
+    )
     def partial_update(self, request, *args, **kwargs):
+        """Partial Update Readiness Level Criterion Answers
+
+        Updates a Readiness Level Criterion Answer field/s.
+        """
         readinesslevel_criterion_answer = self.get_object()
 
         request_serializer = (
@@ -595,9 +679,17 @@ class StartupReadinessLevelViewSet(
         return queryset.all()
 
     def list(self, request, *args, **kwargs):
+        """List Startup Readiness Levels
+
+        List collections of Startup Readiness Level instances.
+        """
         return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
+        """Get Startup Readiness Level
+
+        Gets a Startup Readiness Level instance.
+        """
         return super().retrieve(request, *args, **kwargs)
 
     @swagger_auto_schema(auto_schema=None)
@@ -605,9 +697,17 @@ class StartupReadinessLevelViewSet(
         pass
 
     def partial_update(self, request, *args, **kwargs):
+        """Update Startup Readiness Level
+
+        Updates a startup Readiness Level instance.
+        """
         return super().partial_update(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
+        """Create Startup Readiness Level
+
+        Creates a new Startup Readiness Level instance.
+        """
         return super().create(request, *args, **kwargs)
 
     @swagger_auto_schema(
@@ -616,6 +716,10 @@ class StartupReadinessLevelViewSet(
     )
     @action(url_path="bulk-create", detail=False, methods=["POST"])
     def bulk_create(self, request):
+        """Bulk Create Readiness Levels
+
+        Creates multiple Readiness Level Instances.
+        """
         request_serializer = startups_serializers.request.BulkCreateStartupReadinessLevelRequestSerializer(
             data=request.data
         )
@@ -656,6 +760,10 @@ class CalculatorQuestionAnswerViewSet(BaseViewSet):
     )
     @action(url_path="bulk-create", detail=False, methods=["POST"])
     def bulk_create(self, request):
+        """Bulk Create Calculator Question Answers
+
+        Creates multiple Calculator Question Answer Instances.
+        """
         request_serializer = startups_serializers.request.BulkCreateCalculatorQuestionAnswerRequestSerializer(
             data=request.data
         )

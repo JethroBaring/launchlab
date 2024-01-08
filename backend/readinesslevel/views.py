@@ -2,6 +2,7 @@ from generic.views import BaseViewSet
 from rest_framework import mixins
 from readinesslevel import models as readinesslevel_models
 from readinesslevel import serializers as readinesslevel_serializers
+from drf_yasg.utils import swagger_auto_schema
 
 
 class UratQuestionViewSet(
@@ -35,7 +36,17 @@ class UratQuestionViewSet(
 
         return queryset.all()
 
+    @swagger_auto_schema(
+        query_serializer=readinesslevel_serializers.query.UratQuestionQuerySerializer,
+        responses={
+            200: readinesslevel_serializers.base.UratQuestionBaseSerializer(many=True)
+        },
+    )
     def list(self, request, *args, **kwargs):
+        """List Urat Questions
+
+        Gets a collection of Urat Question instances.
+        """
         return super().list(request, *args, **kwargs)
 
 
@@ -62,7 +73,17 @@ class ReadinessLevelViewSet(
 
         return queryset.all()
 
+    @swagger_auto_schema(
+        query_serializer=readinesslevel_serializers.query.ReadinessLevelQuerySerializer,
+        responses={
+            200: readinesslevel_serializers.base.ReadinessLevelBaseSerializer(many=True)
+        },
+    )
     def list(self, request, *args, **kwargs):
+        """List Readiness Levels
+
+        Gets a collection of Readiness Level instances.
+        """
         return super().list(request, *args, **kwargs)
 
 
@@ -80,7 +101,7 @@ class CalculatorCategoryViewSet(
             return []
 
         return super().get_permissions()
-    
+
     def get_queryset(self):
         queryset = self.queryset
         request = self.request
@@ -97,5 +118,17 @@ class CalculatorCategoryViewSet(
 
         return queryset.all()
 
+    @swagger_auto_schema(
+        query_serializer=readinesslevel_serializers.query.CalculatorCatgoryQuerySerializer,
+        responses={
+            200: readinesslevel_serializers.base.CalculatorCategoryBaseSerializer(
+                many=True
+            )
+        },
+    )
     def list(self, request, *args, **kwargs):
+        """List Calculator Categories
+
+        Gets a collection of Calculator Category instances.
+        """
         return super().list(request, *args, **kwargs)
