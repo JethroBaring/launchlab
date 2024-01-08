@@ -9,7 +9,7 @@ from users import models as users_models
 from django.db import transaction
 from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Sum, Subquery, OuterRef
 from startups import utils as startups_utils
 
 
@@ -25,7 +25,7 @@ class StartupViewSet(
     def get_permissions(self):
         viewset_action = self.action
 
-        if viewset_action in ["create", "create_initial_readiness_level"]:
+        if viewset_action == "create":
             return []
 
         return super().get_permissions()
@@ -184,6 +184,114 @@ class StartupViewSet(
         startup.mentors.set(mentor_ids)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(url_path="ranking-by-urat", detail=False, methods=["GET"])
+    def ranking_by_urat(self, request):
+        urat_rankings = startups_models.URATQuestionAnswer.objects.values(
+            "startup"
+        ).annotate(urat_score=Sum("score"))
+
+        final_scores = []
+        for urat_ranking in urat_rankings:
+            startup_id = urat_ranking.get("startup")
+            technology_level, *_ = startups_utils.calculate_levels(startup_id)
+
+            if technology_level < 4:
+                continue
+
+            final_scores.append(
+                {
+                    "startup_id": startup_id,
+                    "score": urat_ranking.get("urat_score") + technology_level,
+                }
+            )
+
+        final_scores.sort(key=lambda x: x.get("score", 0), reverse=True)
+
+        startup_ids = [ranking["startup_id"] for ranking in final_scores]
+
+        startups = startups_models.Startup.objects.filter(pk__in=startup_ids)
+        startups_map = {}
+        for startup in startups:
+            startups_map[startup.id] = startup
+
+        ordered_startups = []
+        for final_score in final_scores:
+            ordered_startups.append(startups_map[final_score.get("startup_id")])
+
+        return Response(
+            startups_serializers.base.StartupBaseSerializer(
+                ordered_startups, many=True
+            ).data
+        )
+
+    @action(url_path="ranking-by-rubrics", detail=False, methods=["GET"])
+    def ranking_by_rubrics(self, request):
+        readiness_type_weights = {
+            "T": 4,
+            "M": 3,
+            "R": 2,
+            "A": 2,
+            "O": 2,
+            "I": 2,
+        }
+
+        subquery = Subquery(
+            startups_models.StartupReadinessLevel.objects.filter(
+                startup_id=OuterRef("startup_id"),
+                readiness_level__readiness_type_id=OuterRef(
+                    "readiness_level__readiness_type_id"
+                ),
+                readiness_level__readiness_type__rl_type__in=readiness_type_weights.keys(),
+            )
+            .order_by("datetime_created")
+            .values("id")[:1]
+        )
+
+        levels = startups_models.StartupReadinessLevel.objects.filter(id=subquery)
+
+        startup_scores = []
+        for level in levels:
+            startup_score = {
+                "startup_id": level.startup_id,
+                "weighted_score": level.readiness_level.level
+                * readiness_type_weights[level.readiness_level.readiness_type.rl_type],
+            }
+            startup_scores.append(startup_score)
+
+        total_weighted_scores = {}
+        for startup_score in startup_scores:
+            startup_id = startup_score["startup_id"]
+            if startup_id not in total_weighted_scores:
+                total_weighted_scores[startup_id] = 0
+            total_weighted_scores[startup_id] += startup_score["weighted_score"]
+
+        ranked_startups = sorted(
+            [
+                {"startup_id": k, "total_weighted_score": v}
+                for k, v in total_weighted_scores.items()
+            ],
+            key=lambda x: x["total_weighted_score"],
+            reverse=True,
+        )
+
+        startup_ids = [ranking["startup_id"] for ranking in ranked_startups]
+
+        startups = startups_models.Startup.objects.filter(pk__in=startup_ids)
+
+        startups_map = {}
+        for startup in startups:
+            startups_map[startup.id] = startup
+
+        ordered_startups = []
+        for ranked_startup in ranked_startups:
+            ordered_startups.append(startups_map[ranked_startup.get("startup_id")])
+
+        return Response(
+            startups_serializers.base.StartupBaseSerializer(
+                ordered_startups, many=True
+            ).data
+        )
 
 
 class UratQuestionAnswerViewSet(
