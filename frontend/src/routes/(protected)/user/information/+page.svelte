@@ -7,7 +7,11 @@
 	export let data;
 	console.log(data.info);
 </script>
-
+<svelte:head>
+    <title>
+        Startup - Information
+    </title>
+</svelte:head>
 <div class="flex flex-1 flex-col">
 	<div class="flex flex-col flex-1 gap-10">
 		<div class="flex flex-col gap-5 overflow-scroll h-full w-full mx-auto">

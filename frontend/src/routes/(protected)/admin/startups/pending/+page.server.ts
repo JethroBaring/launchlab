@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch, cookies }) => {
-    const response = await fetch('http://127.0.0.1:8000/startups?qualification_status=1', {
+    const response = await fetch('http://127.0.0.1:8000/startups/ranking-by-urat/', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
     const data = await response.json()
     if(response.ok) {
         return {
-            applicants: data.results
+            applicants: data
         }
     }
 

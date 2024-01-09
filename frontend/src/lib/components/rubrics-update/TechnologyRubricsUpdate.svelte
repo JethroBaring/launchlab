@@ -5,9 +5,12 @@
 
 	const updateScore = async (
 		id: number,
-		newScore: number
+		newScore: number,
+		newRemark: string,
 	) => {
 		try {
+			const remark = document.getElementById(newRemark)
+			const remarkValue = remark.value
 			const d = await fetch(`http://127.0.0.1:8000/readiness-level-criterion-answers/${id}/`, {
 			method: 'PATCH',
 			headers: {
@@ -17,7 +20,8 @@
 			body: JSON.stringify({
 				startup_id: startupId,
 				criterion_id: id,
-				score: newScore
+				score: newScore,
+				remark: remarkValue
 			})
 		});
 
@@ -117,11 +121,11 @@
             <tr class="hover h-10 p-5 rounded-lg">
 				<input type="hidden" name={`technologyCriteria${question.level}${i+1}`} value={`${criteria.id}`}>
                 <td class="">{criteria.criteria}</td>
-                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=5 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 5)} data-tip={criteria.excellent_description} checked={scores[(index)*6+i].score === 5}/></td>
-                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=4 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 4)} data-tip={criteria.good_description} checked={scores[(index)*6+i].score === 4}/></td>
-                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=3 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 3)} data-tip={criteria.fair_description} checked={scores[(index)*6+i].score === 3}/></td>
-                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=2 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 2)} data-tip={criteria.poor_description} checked={scores[(index)*6+i].score === 2}/></td>
-                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=1 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 1)} data-tip={criteria.very_poor_description} checked={scores[(index)*6+i].score === 1}/></td>
+                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=5 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 5, `technologyRemark${question.level}${i+1}`)} data-tip={criteria.excellent_description} checked={scores[(index)*6+i].score === 5}/></td>
+                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=4 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 4, `technologyRemark${question.level}${i+1}`)} data-tip={criteria.good_description} checked={scores[(index)*6+i].score === 4}/></td>
+                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=3 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 3, `technologyRemark${question.level}${i+1}`)} data-tip={criteria.fair_description} checked={scores[(index)*6+i].score === 3}/></td>
+                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=2 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 2, `technologyRemark${question.level}${i+1}`)} data-tip={criteria.poor_description} checked={scores[(index)*6+i].score === 2}/></td>
+                <td class="text-center" ><input type="radio" name={`technology${question.level}${i+1}`} id={`technology${question.level}${i+1}`} value=1 class="radio tooltip" on:click={() => updateScore(scores[(index)*6+i].id, 1, `technologyRemark${question.level}${i+1}`)} data-tip={criteria.very_poor_description} checked={scores[(index)*6+i].score === 1}/></td>
 				<td class="text-center flex gap-1" >
 					<textarea name={`technologyRemark${question.level}${i+1}`} id={`technologyRemark${question.level}${i+1}`} class="textarea max-w-full h-10 flex-1" value={`${scores[(index)*6+i].remark}`}></textarea>
 					<button on:click={() => updateRemark(scores[(index)*6+i].id,`technologyRemark${question.level}${i+1}`,`technology${question.level}${i+1}`)}>

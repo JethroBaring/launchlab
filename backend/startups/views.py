@@ -76,7 +76,7 @@ class StartupViewSet(
         ):
             queryset = queryset.filter(mentors=user)
 
-        return queryset.filter(datetime_deleted__isnull=True).all()
+        return queryset.filter(datetime_deleted__isnull=True).distinct().all()
 
     @swagger_auto_schema(
         request_body=startups_serializers.request.StartupRequestSerializer,

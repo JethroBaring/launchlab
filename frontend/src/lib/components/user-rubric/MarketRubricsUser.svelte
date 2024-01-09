@@ -33,7 +33,7 @@
                 <td class="text-center" ><input type="radio" name={`market${question.level}${i+1}`} value=2 class="radio tooltip pointer-events-none" data-tip={criteria.poor_description} checked={scores[(index)*6+i].score === 2}/></td>
                 <td class="text-center" ><input type="radio" name={`market${question.level}${i+1}`} value=1 class="radio tooltip pointer-events-none" data-tip={criteria.very_poor_description} checked={scores[(index)*6+i].score === 1}/></td>
 				<td class="text-center" >
-					<textarea name={`marketRemark${question.level}${i+1}`} readonly class="textarea max-w-full h-10"></textarea>
+					<textarea name={`marketRemark${question.level}${i+1}`} readonly class="textarea max-w-full h-10" value={`${scores[(index)*6+i].remark}`}></textarea>
 					</td>
             </tr>
             {/each}

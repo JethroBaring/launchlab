@@ -85,8 +85,7 @@ export const actions = {
 			})
 
 			if(assignmentor.ok) {
-				throw redirect(302, `/admin/startups/qualified/${params.applicant}`);
-
+				throw redirect(302, `/admin/startups/rated/`);
 			}
 
 		} else {
@@ -110,9 +109,6 @@ export const actions = {
 			return {
 				message: 'email has been sent to the applicant'
 			};
-		} else {
-			console.log(response.statusText);
-			throw redirect(302, '/admin/startups/applicants');
 		}
 	},
 };

@@ -17,13 +17,13 @@
 		// 	required: false
 		// },
 		{
-			label: 'Team Member 4 (Last Name, First Name)',
+			label: 'Team Member 4 Email',
 			name: 'member_4_email',
 			placeholder: 'team member 4',
 			required: false
 		},
 		{
-			label: 'Team Member 5 (Last Name, First Name)',
+			label: 'Team Member 5 Email',
 			name: 'member_5_email',
 			placeholder: 'team member 5',
 			required: false
@@ -61,7 +61,7 @@
 		{/each}
 		<div class="form-control">
 			<label class="label" for="member_2_email">
-				<span class="label-text text-base">Team Member 2 (Last Name, First Name)</span>
+				<span class="label-text text-base">Team Member 2 Email</span>
 			</label>
 			<input
 				type="text"
@@ -73,7 +73,7 @@
 		</div>
 		<div class="form-control">
 			<label class="label" for="member_3_email">
-				<span class="label-text text-base">Team Member 3 (Last Name, First Name)</span>
+				<span class="label-text text-base">Team Member 3 Email</span>
 			</label>
 			<input
 				type="text"

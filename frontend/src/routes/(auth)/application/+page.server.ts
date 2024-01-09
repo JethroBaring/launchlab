@@ -113,6 +113,9 @@ export const actions = {
 				})
 			})
 
+			console.log({
+				urat_question_answers: answers
+			})
 			const urat_answers = await fetch(
 				'http://127.0.0.1:8000/urat-question-answers/bulk-create/',
 				{

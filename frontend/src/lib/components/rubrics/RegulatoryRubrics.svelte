@@ -35,7 +35,8 @@
                 <td class="text-center" ><input type="radio" name={`regulatory${question.level}${i+1}`} value=1 class="radio tooltip" data-tip={criteria.very_poor_description} checked/></td>
 				<td class="text-center" >
 					<textarea name={`regulatoryRemark${question.level}${i+1}`} class="textarea max-w-full h-10"></textarea>
-					</td>            </tr>
+					</td>            
+				</tr>
             {/each}
 		</tbody>
 	</table>

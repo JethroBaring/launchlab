@@ -20,7 +20,7 @@
                 <th class="text-center">Fair (3)</th>
 				<th class="text-center">Poor (2)</th>
 				<th class="text-center">Very Poor (1)</th>
-				<th class="text-center">Remarks</th>
+				<th class="text-center">Remark</th>
 			</tr>
 		</thead>
 		<tbody>

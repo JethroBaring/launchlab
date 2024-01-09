@@ -88,7 +88,7 @@ export const actions = {
 
 			if (checkScores.ok) {
 				if (data.technology_level >= 4) {
-					throw redirect(302, `/admin/startups/rated/${params.applicant}`);
+					throw redirect(302, `/admin/startups/pending/`);
 				} else {
 					throw redirect(302, `/admin/startups/rated/`);
 				}

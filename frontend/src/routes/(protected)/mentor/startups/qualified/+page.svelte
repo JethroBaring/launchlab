@@ -1,10 +1,13 @@
 <script lang="ts">
 	export let data
 </script>
-
+<svelte:head>
+    <title>
+        Assigned Startups
+    </title>
+</svelte:head>
 <div class="h-96">
 	<table class="table">
-		<!-- head -->
 		<thead>
 			<tr>
 				<th>Startup Name</th>

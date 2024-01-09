@@ -24,6 +24,7 @@
 				type="file"
 				class="file-input file-input-bordered w-full btn-custom"
 				name="capsule_proposal"
+				accept=".pdf"
 			/>
 		</div>
 		<div class="form-control">

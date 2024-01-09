@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>Overview</title>
+	<title>Startup - Readiness Level</title>
 </svelte:head>
 
 <div class="flex flex-1 flex-col">

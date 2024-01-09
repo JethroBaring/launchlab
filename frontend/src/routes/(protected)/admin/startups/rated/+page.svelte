@@ -2,7 +2,11 @@
 	export let data;
 	console.log()
 </script>
-
+<svelte:head>
+    <title>
+        Startup - Rated
+    </title>
+</svelte:head>
 <div class="flex w-full justify-end">
 	<button class="btn btn-primary normal-case btn-custom" onclick="my_modal_2.showModal()"
 		>Approve Top 10</button
